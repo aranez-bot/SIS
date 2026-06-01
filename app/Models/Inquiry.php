@@ -9,6 +9,7 @@ class Inquiry extends Model
     protected $fillable = [
         'student_id',
         'department_id',
+        'category',
         'assigned_admin_id',
         'subject',
         'description',
@@ -70,9 +71,18 @@ class Inquiry extends Model
         return $this->status === 'resolved';
     }
 
+    public function isAnswered()
+    {
+        return $this->status === 'answered';
+    }
+
+    public function isRejected()
+    {
+        return $this->status === 'rejected';
+    }
+
     public function isClosed()
     {
         return $this->status === 'closed';
     }
 }
-

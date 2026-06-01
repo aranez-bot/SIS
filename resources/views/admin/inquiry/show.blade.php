@@ -26,6 +26,10 @@
                             <p class="mb-3">
                                 {{ $inquiry->student->name }}<br>
                                 <small class="text-muted">{{ $inquiry->student->email }}</small>
+                                @if ($inquiry->student->user_identifier)
+                                    <br>
+                                    <small class="text-muted">ID: {{ $inquiry->student->user_identifier }}</small>
+                                @endif
                             </p>
                         </div>
                         <div class="col-md-6 text-end">
@@ -38,6 +42,11 @@
                     <hr>
                     <h6>Student's Inquiry:</h6>
                     <p class="text-muted">{{ $inquiry->description }}</p>
+                    @if ($inquiry->resolution_notes)
+                        <hr>
+                        <h6>Resolution Notes:</h6>
+                        <p class="text-muted mb-0">{{ $inquiry->resolution_notes }}</p>
+                    @endif
                 </div>
             </div>
 
@@ -84,6 +93,11 @@
                             </div>
                         </div>
                     </form>
+                    @if ($messages->hasPages())
+                        <div class="mt-3">
+                            {{ $messages->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -102,11 +116,14 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" name="status" id="status" required>
-                                <option value="pending" @if ($inquiry->status === 'pending') selected @endif>Pending</option>
-                                <option value="in_progress" @if ($inquiry->status === 'in_progress') selected @endif>In Progress</option>
-                                <option value="resolved" @if ($inquiry->status === 'resolved') selected @endif>Resolved</option>
-                                <option value="closed" @if ($inquiry->status === 'closed') selected @endif>Closed</option>
+                                @foreach ($statuses as $value => $label)
+                                    <option value="{{ $value }}" @selected($inquiry->status === $value)>{{ $label }}</option>
+                                @endforeach
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resolution_notes" class="form-label">Resolution Notes</label>
+                            <textarea class="form-control" name="resolution_notes" id="resolution_notes" rows="3" placeholder="Optional notes for resolved or closed inquiries">{{ old('resolution_notes', $inquiry->resolution_notes) }}</textarea>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">
@@ -116,7 +133,49 @@
                 </div>
             </div>
 
-            <div class="card" style="border-left: 4px solid var(--info);">
+            <div class="card" id="student-information" style="border-left: 4px solid var(--primary-color);">
+                <div class="card-header section-card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-user-graduate"></i> Student Information
+                    </h6>
+                </div>
+                <div class="card-body small">
+                    <p class="mb-2">
+                        <strong>Name:</strong><br>
+                        {{ $inquiry->student->name }}
+                    </p>
+                    <p class="mb-2">
+                        <strong>Email:</strong><br>
+                        <a href="mailto:{{ $inquiry->student->email }}">{{ $inquiry->student->email }}</a>
+                    </p>
+                    @if ($inquiry->student->user_identifier)
+                        <p class="mb-2">
+                            <strong>Student ID:</strong><br>
+                            {{ $inquiry->student->user_identifier }}
+                        </p>
+                    @endif
+                    @if ($inquiry->student->phone)
+                        <p class="mb-2">
+                            <strong>Contact Number:</strong><br>
+                            {{ $inquiry->student->phone }}
+                        </p>
+                    @endif
+                    @if ($inquiry->student->address)
+                        <p class="mb-2">
+                            <strong>Address:</strong><br>
+                            {{ $inquiry->student->address }}
+                        </p>
+                    @endif
+                    @if ($inquiry->student->bio)
+                        <p class="mb-0">
+                            <strong>Profile Notes:</strong><br>
+                            {{ $inquiry->student->bio }}
+                        </p>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card mt-3" style="border-left: 4px solid var(--secondary-color);">
                 <div class="card-header section-card-header">
                     <h6 class="mb-0">
                         <i class="fas fa-info-circle"></i> Inquiry Details
@@ -126,6 +185,14 @@
                     <p class="mb-2">
                         <strong>Inquiry ID:</strong><br>
                         #{{ $inquiry->id }}
+                    </p>
+                    <p class="mb-2">
+                        <strong>Department:</strong><br>
+                        {{ $inquiry->department->name }}
+                    </p>
+                    <p class="mb-2">
+                        <strong>Category:</strong><br>
+                        {{ ucfirst(str_replace('_', ' ', $inquiry->category ?? 'general')) }}
                     </p>
                     <p class="mb-2">
                         <strong>Submitted:</strong><br>
@@ -139,10 +206,42 @@
                     @endif
                     <p class="mb-0">
                         <strong>Total Messages:</strong><br>
-                        {{ $inquiry->messages->count() }}
+                        {{ $inquiry->messages()->count() }}
                     </p>
                 </div>
             </div>
+
+            @if (auth()->user()->isDepartmentAdmin() && isset($departments) && $departments->isNotEmpty())
+                <div class="card mt-3" style="border-left: 4px solid var(--warning-color);">
+                    <div class="card-header section-card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-share"></i> Forward Inquiry
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('admin.inquiry.forward', $inquiry) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label for="department_id" class="form-label">Forward to Department</label>
+                                <select class="form-select" id="department_id" name="department_id" required>
+                                    <option value="">Select department</option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="forward_note" class="form-label">Forward Note</label>
+                                <textarea class="form-control" id="forward_note" name="forward_note" rows="2" placeholder="Optional note for context"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-secondary w-100">
+                                <i class="fas fa-share"></i> Forward
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     // Student Routes
     Route::middleware('user.type:student')->group(function () {
         Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
+        Route::get('/student/mobile-app', [StudentController::class, 'mobileApp'])->name('student.mobile-app');
+        Route::get('/student/mobile-app/download', [StudentController::class, 'downloadMobileApp'])->name('student.mobile-app.download');
         Route::get('/student/inquiry/create', [StudentController::class, 'createInquiry'])->name('student.inquiry.create');
         Route::post('/student/inquiry', [StudentController::class, 'storeInquiry'])->name('student.inquiry.store');
         Route::get('/student/inquiry/{inquiry}', [StudentController::class, 'viewInquiry'])->name('student.inquiry.show');
@@ -53,7 +55,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/department/inquiry/inbox', [DepartmentAdminController::class, 'inquiryInbox'])->name('admin.inquiry.inbox');
         Route::get('/department/inquiry/{inquiry}', [DepartmentAdminController::class, 'viewInquiry'])->name('admin.inquiry.show');
         Route::put('/department/inquiry/{inquiry}/status', [DepartmentAdminController::class, 'updateInquiryStatus'])->name('admin.inquiry.update-status');
+        Route::put('/department/inquiry/{inquiry}/forward', [DepartmentAdminController::class, 'forwardInquiry'])->name('admin.inquiry.forward');
         Route::get('/department/statistics', [DepartmentAdminController::class, 'statistics'])->name('admin.statistics');
+        Route::get('/department/faqs', [DepartmentAdminController::class, 'faqs'])->name('admin.faqs.index');
+        Route::post('/department/faqs', [DepartmentAdminController::class, 'storeFaq'])->name('admin.faqs.store');
+        Route::put('/department/faqs/{faq}', [DepartmentAdminController::class, 'updateFaq'])->name('admin.faqs.update');
+        Route::delete('/department/faqs/{faq}', [DepartmentAdminController::class, 'deleteFaq'])->name('admin.faqs.delete');
         Route::get('/department/notifications', [DepartmentAdminController::class, 'notifications'])->name('admin.notifications');
     });
 
@@ -62,8 +69,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/dashboard', [SuperAdminController::class, 'dashboard'])->name('superadmin.dashboard');
         Route::get('/admin/inquiry/{inquiry}', [DepartmentAdminController::class, 'viewInquiry'])->name('superadmin.inquiry.show');
         Route::put('/admin/inquiry/{inquiry}/status', [DepartmentAdminController::class, 'updateInquiryStatus'])->name('superadmin.inquiry.update-status');
-        Route::get('/admin/notifications', [SuperAdminController::class, 'notifications'])->name('superadmin.notifications');
-        Route::post('/admin/notifications/{notification}/read', [SuperAdminController::class, 'markNotificationRead'])->name('superadmin.notification.mark-read');
 
         // Departments Management
         Route::get('/admin/departments', [SuperAdminController::class, 'manageDepartments'])->name('superadmin.departments.index');
@@ -75,14 +80,22 @@ Route::middleware('auth')->group(function () {
 
         // Users Management
         Route::get('/admin/users', [SuperAdminController::class, 'manageUsers'])->name('superadmin.users.index');
+        Route::get('/admin/users/create', [SuperAdminController::class, 'createUser'])->name('superadmin.users.create');
+        Route::post('/admin/users', [SuperAdminController::class, 'storeUser'])->name('superadmin.users.store');
         Route::get('/admin/users/create-admin', [SuperAdminController::class, 'createAdmin'])->name('superadmin.users.create-admin');
         Route::post('/admin/users/create-admin', [SuperAdminController::class, 'storeAdmin'])->name('superadmin.users.store-admin');
         Route::get('/admin/users/{user}/edit', [SuperAdminController::class, 'editUser'])->name('superadmin.users.edit');
         Route::put('/admin/users/{user}', [SuperAdminController::class, 'updateUser'])->name('superadmin.users.update');
+        Route::patch('/admin/users/{user}/status', [SuperAdminController::class, 'toggleUserStatus'])->name('superadmin.users.toggle-status');
         Route::delete('/admin/users/{user}', [SuperAdminController::class, 'deleteUser'])->name('superadmin.users.delete');
 
         // Analytics
         Route::get('/admin/analytics', [SuperAdminController::class, 'analytics'])->name('superadmin.analytics');
+        Route::get('/admin/system-settings', [SuperAdminController::class, 'systemSettings'])->name('superadmin.system-settings');
+        Route::get('/admin/role-permissions', [SuperAdminController::class, 'rolePermissions'])->name('superadmin.role-permissions');
+        Route::get('/admin/audit-logs', [SuperAdminController::class, 'auditLogs'])->name('superadmin.audit-logs');
+        Route::get('/admin/maintenance', [SuperAdminController::class, 'maintenance'])->name('superadmin.maintenance');
+        Route::get('/admin/maintenance/backup', [SuperAdminController::class, 'downloadBackup'])->name('superadmin.maintenance.backup');
     });
 
     // Shared Message Routes

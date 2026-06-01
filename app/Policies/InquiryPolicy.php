@@ -33,7 +33,9 @@ class InquiryPolicy
             return true;
         }
 
-        return $user->isDepartmentAdmin() && $user->department_id === $inquiry->department_id;
+        return $user->isDepartmentAdmin()
+            && $user->is_active !== false
+            && (int) $user->department_id === (int) $inquiry->department_id;
     }
 
     /**
@@ -61,7 +63,9 @@ class InquiryPolicy
             return true;
         }
 
-        return $user->isDepartmentAdmin() && $user->department_id === $inquiry->department_id;
+        return $user->isDepartmentAdmin()
+            && $user->is_active !== false
+            && (int) $user->department_id === (int) $inquiry->department_id;
     }
 
     /**
@@ -80,7 +84,8 @@ class InquiryPolicy
         if ($user->isStudent()) {
             return $user->id === $inquiry->student_id;
         } elseif ($user->isDepartmentAdmin()) {
-            return $user->department_id === $inquiry->department_id;
+            return $user->is_active !== false
+                && (int) $user->department_id === (int) $inquiry->department_id;
         } elseif ($user->isSuperAdmin()) {
             return true;
         }

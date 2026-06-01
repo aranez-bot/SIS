@@ -8,32 +8,39 @@
     </h1>
 
     <div class="row mb-4">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card">
                 <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary-color);"></i>
-                <h3>{{ $department->inquiries()->count() }}</h3>
-                <p>Total Inquiries</p>
+                <h3>{{ $totalCount }}</h3>
+                <p>Total Assigned</p>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card" style="border-left-color: var(--warning-color);">
                 <i class="fas fa-hourglass-half" style="font-size: 2rem; color: var(--warning-color);"></i>
                 <h3>{{ $pendingCount }}</h3>
                 <p>Pending</p>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card" style="border-left-color: #3b82f6;">
                 <i class="fas fa-spinner" style="font-size: 2rem; color: #3b82f6;"></i>
                 <h3>{{ $inProgressCount }}</h3>
                 <p>In Progress</p>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 col-sm-6 mb-3">
             <div class="stat-card" style="border-left-color: var(--success-color);">
                 <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success-color);"></i>
                 <h3>{{ $resolvedCount }}</h3>
                 <p>Resolved</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--muted-color);">
+                <i class="fas fa-lock" style="font-size: 2rem; color: var(--muted-color);"></i>
+                <h3>{{ $closedCount }}</h3>
+                <p>Closed</p>
             </div>
         </div>
     </div>
@@ -130,6 +137,53 @@
                 </div>
             </div>
 
+            <div class="card mt-3" style="border-left: 4px solid var(--secondary-color);">
+                <div class="card-header section-card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-tags"></i> Frequently Asked Concerns
+                    </h6>
+                </div>
+                <div class="card-body small">
+                    @forelse ($frequentConcerns as $concern)
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ Str::limit($concern->subject, 34) }}</span>
+                            <span class="badge bg-light text-dark">{{ $concern->total }}</span>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">No concern data yet.</p>
+                    @endforelse
+                    <hr>
+                    @forelse ($frequentCategories as $category)
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ ucfirst(str_replace('_', ' ', $category->category ?? 'general')) }}</span>
+                            <span class="badge bg-light text-dark">{{ $category->total }}</span>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">No category data yet.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="card mt-3" style="border-left: 4px solid var(--warning-color);">
+                <div class="card-header section-card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-question-circle"></i> Department FAQ
+                        </h6>
+                        <a href="{{ route('admin.faqs.index') }}" class="btn btn-sm btn-secondary">Manage</a>
+                    </div>
+                </div>
+                <div class="card-body small">
+                    @forelse ($recentFaqs as $faq)
+                        <p class="mb-2">
+                            <strong>{{ $faq->question }}</strong><br>
+                            <span class="text-muted">{{ Str::limit($faq->answer, 70) }}</span>
+                        </p>
+                    @empty
+                        <p class="text-muted mb-0">Add common answers for this department.</p>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
 @endsection

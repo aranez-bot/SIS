@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Department;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,23 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        try {
+            $authenticated = Auth::attempt($credentials, $request->boolean('remember'));
+        } catch (QueryException) {
+            return back()->withErrors([
+                'email' => 'We could not connect to the database. Please check the database settings and try again.',
+            ])->onlyInput('email');
+        }
+
+        if ($authenticated) {
+            if (! Auth::user()->is_active) {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'email' => 'This account is deactivated. Please contact the system administrator.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
             return redirect()->intended(route('dashboard'));
         }

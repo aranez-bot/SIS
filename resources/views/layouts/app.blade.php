@@ -10,21 +10,23 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary-color: #14b8a6;
-            --accent-color: #f97316;
-            --danger-color: #dc2626;
-            --success-color: #059669;
-            --warning-color: #d97706;
-            --dark-color: #172033;
-            --muted-color: #64748b;
-            --border-color: #dbe3ef;
+            --primary-color: #4f67d8;
+            --primary-dark: #3f55bd;
+            --secondary-color: #4fa7a1;
+            --accent-color: #d99255;
+            --danger-color: #c75b68;
+            --success-color: #4c9a73;
+            --warning-color: #c48a3a;
+            --dark-color: #202838;
+            --muted-color: #718096;
+            --border-color: #dde6f1;
             --light-color: #f7f9fc;
             --surface-color: #ffffff;
-            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-            --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
-            --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.12);
+            --surface-soft: #f9fbff;
+            --surface-tint: #eef5f8;
+            --shadow-sm: 0 1px 2px rgba(32, 40, 56, 0.04);
+            --shadow-md: 0 12px 28px rgba(32, 40, 56, 0.07);
+            --shadow-lg: 0 24px 54px rgba(32, 40, 56, 0.11);
         }
 
         * {
@@ -36,9 +38,10 @@
         body {
             font-family: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
             background:
-                radial-gradient(circle at top left, rgba(37, 99, 235, 0.10), transparent 28rem),
-                linear-gradient(180deg, #f8fbff 0%, #eef3f8 100%);
-            color: #334155;
+                radial-gradient(circle at 12% 8%, rgba(79, 103, 216, 0.11), transparent 28rem),
+                radial-gradient(circle at 88% 0%, rgba(79, 167, 161, 0.10), transparent 24rem),
+                linear-gradient(180deg, #fbfcff 0%, #f1f6f8 100%);
+            color: #3f4a5f;
             min-height: 100vh;
         }
 
@@ -158,6 +161,15 @@
         .sidebar .nav-link i {
             margin-right: 0.75rem;
             width: 20px;
+        }
+
+        .sidebar-section-label {
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            margin: 1rem 0.95rem 0.4rem;
+            text-transform: uppercase;
         }
 
         .sidebar-overlay {
@@ -323,6 +335,16 @@
         .status-resolved {
             background-color: #dcfce7;
             color: #166534;
+        }
+
+        .status-answered {
+            background-color: #e0f2fe;
+            color: #075985;
+        }
+
+        .status-rejected {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
 
         .status-closed {
@@ -550,6 +572,179 @@
             color: var(--primary-color);
         }
 
+        .navbar {
+            background: rgba(255, 255, 255, 0.86);
+            border-bottom: 1px solid rgba(221, 230, 241, 0.86);
+            box-shadow: 0 10px 30px rgba(32, 40, 56, 0.05);
+        }
+
+        .navbar-brand {
+            color: var(--dark-color) !important;
+        }
+
+        #sidebarToggle {
+            background: #f7f9fd;
+            border-color: #dce5f0;
+            color: #516077;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.84);
+            border-right: 1px solid rgba(221, 230, 241, 0.84);
+            box-shadow: 8px 0 28px rgba(32, 40, 56, 0.035);
+            backdrop-filter: blur(18px);
+        }
+
+        .sidebar .nav-link {
+            color: #5d6a7e;
+            border-radius: 10px;
+            font-weight: 650;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: linear-gradient(90deg, rgba(79, 103, 216, 0.12), rgba(79, 167, 161, 0.10));
+            color: #324bba;
+        }
+
+        .sidebar .nav-link.active {
+            box-shadow: inset 3px 0 0 var(--primary-color);
+        }
+
+        .sidebar-section-label {
+            color: #9aa6b8;
+        }
+
+        .main-content {
+            padding: 2.25rem;
+        }
+
+        .main-content h1 {
+            color: #222a3a;
+        }
+
+        .card,
+        .stat-card {
+            border-color: rgba(221, 230, 241, 0.92);
+            box-shadow: 0 14px 34px rgba(32, 40, 56, 0.055);
+        }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .card:hover,
+        .stat-card:hover {
+            box-shadow: 0 18px 42px rgba(32, 40, 56, 0.075);
+            transform: translateY(-1px);
+        }
+
+        .card-header,
+        .section-card-header {
+            background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%) !important;
+            color: #253044 !important;
+            border-bottom-color: rgba(221, 230, 241, 0.9);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #596bdd, #7ca3ec);
+            box-shadow: 0 10px 20px rgba(79, 103, 216, 0.18);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #495ac9, #6f95df);
+            box-shadow: 0 14px 26px rgba(79, 103, 216, 0.24);
+        }
+
+        .btn-secondary {
+            background: #f8fafc;
+            color: #566276;
+        }
+
+        .form-control,
+        .form-select {
+            border-color: #d8e2ee;
+            background-color: #ffffff;
+            color: #2f3a4c;
+            box-shadow: inset 0 1px 1px rgba(32, 40, 56, 0.02);
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #8090e8;
+            box-shadow: 0 0 0 4px rgba(79, 103, 216, 0.11);
+        }
+
+        .table thead {
+            background: #f6f9fd;
+        }
+
+        .table thead th {
+            color: #44516a;
+        }
+
+        .table tbody td {
+            color: #4a566b;
+            border-color: #edf3f8;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .notification-item {
+            border-left-width: 3px;
+            background: #f2f7ff;
+            border-radius: 10px;
+        }
+
+        .notification-item:hover {
+            background: #eaf3ff;
+        }
+
+        .notification-item.unread {
+            background: #fff8e8;
+            border-left-color: var(--warning-color);
+        }
+
+        .message-item {
+            border-radius: 14px;
+            box-shadow: 0 8px 20px rgba(32, 40, 56, 0.045);
+        }
+
+        .message-item.sent {
+            background: #e7eefc;
+        }
+
+        .message-item.received {
+            background: #f4f7f9;
+        }
+
+        .stat-card {
+            background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+            border-left-color: #7b89e5;
+        }
+
+        .stat-card i {
+            background: #eef3ff;
+            color: #5264d4;
+        }
+
+        .alert {
+            box-shadow: 0 10px 26px rgba(32, 40, 56, 0.055);
+        }
+
+        .alert-success {
+            background-color: #eaf7f0;
+            color: #2f7656;
+        }
+
+        .alert-error,
+        .alert-danger {
+            background-color: #fff0f2;
+            color: #9f3f4d;
+        }
+
         @media (max-width: 768px) {
             .app-shell {
                 display: block;
@@ -685,9 +880,30 @@
                                         <i class="fas fa-chart-line"></i> Dashboard
                                     </a>
                                 </li>
+                                <li class="sidebar-section-label">Student Tools</li>
                                 <li class="nav-item">
                                     <a class="nav-link @if (Route::currentRouteName() == 'student.inquiry.create') active @endif" href="{{ route('student.inquiry.create') }}">
-                                        <i class="fas fa-plus-circle"></i> New Inquiry
+                                        <i class="fas fa-plus-circle"></i> Submit Inquiry
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('student.inquiry.history') }}">
+                                        <i class="fas fa-tasks"></i> Track Status
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'student.inquiry.show') active @endif" href="{{ route('student.inquiry.history') }}">
+                                        <i class="fas fa-comments"></i> Department Response
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'student.notifications') active @endif" href="{{ route('student.notifications') }}">
+                                        <i class="fas fa-bell"></i> Notification Alerts
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'student.mobile-app') active @endif" href="{{ route('student.mobile-app') }}">
+                                        <i class="fas fa-mobile-alt"></i> Mobile App
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -695,7 +911,17 @@
                                         <i class="fas fa-history"></i> Inquiry History
                                     </a>
                                 </li>
-                                @include('layouts.partials.sidebar-help-links')
+                                <li class="sidebar-section-label">Account & Help</li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'settings') active @endif" href="{{ route('settings') }}">
+                                        <i class="fas fa-user-edit"></i> Edit Profile
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'faqs') active @endif" href="{{ route('faqs') }}">
+                                        <i class="fas fa-question-circle"></i> FAQ / Help
+                                    </a>
+                                </li>
                             </ul>
                         @elseif (auth()->user()->isDepartmentAdmin())
                             <ul class="nav flex-column">
@@ -711,7 +937,12 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link @if (Route::currentRouteName() == 'admin.statistics') active @endif" href="{{ route('admin.statistics') }}">
-                                        <i class="fas fa-chart-bar"></i> Statistics
+                                        <i class="fas fa-chart-bar"></i> Reports
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'admin.faqs.index') active @endif" href="{{ route('admin.faqs.index') }}">
+                                        <i class="fas fa-question-circle"></i> Department FAQ
                                     </a>
                                 </li>
                                 @include('layouts.partials.sidebar-help-links')
@@ -723,19 +954,45 @@
                                         <i class="fas fa-chart-line"></i> Dashboard
                                     </a>
                                 </li>
+                                <li class="sidebar-section-label">Features & Functions</li>
                                 <li class="nav-item">
-                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.departments.index') active @endif" href="{{ route('superadmin.departments.index') }}">
+                                    <a class="nav-link @if (request()->routeIs('superadmin.users.*')) active @endif" href="{{ route('superadmin.users.index') }}">
+                                        <i class="fas fa-users"></i> User and Admin Accounts
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (request()->routeIs('superadmin.departments.*')) active @endif" href="{{ route('superadmin.departments.index') }}">
                                         <i class="fas fa-building"></i> Departments
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.users.index') active @endif" href="{{ route('superadmin.users.index') }}">
-                                        <i class="fas fa-users"></i> Users
+                                    <a class="nav-link @if (request()->routeIs('superadmin.inquiry.*')) active @endif" href="{{ route('superadmin.dashboard') }}#inquiry-master-table">
+                                        <i class="fas fa-table"></i> All Inquiries
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link @if (Route::currentRouteName() == 'superadmin.analytics') active @endif" href="{{ route('superadmin.analytics') }}">
-                                        <i class="fas fa-chart-bar"></i> Analytics
+                                        <i class="fas fa-chart-bar"></i> Reports and Analytics
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.role-permissions') active @endif" href="{{ route('superadmin.role-permissions') }}">
+                                        <i class="fas fa-user-lock"></i> Roles and Permissions
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.system-settings') active @endif" href="{{ route('superadmin.system-settings') }}">
+                                        <i class="fas fa-sliders-h"></i> System Settings
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.audit-logs') active @endif" href="{{ route('superadmin.audit-logs') }}">
+                                        <i class="fas fa-clipboard-list"></i> Audit Logs
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @if (Route::currentRouteName() == 'superadmin.maintenance') active @endif" href="{{ route('superadmin.maintenance') }}">
+                                        <i class="fas fa-database"></i> Backup and Maintenance
                                     </a>
                                 </li>
                                 @include('layouts.partials.sidebar-help-links')

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Superadmin Dashboard')
 
 @section('content')
     @php
@@ -41,6 +41,108 @@
             </h1>
         </div>
         <p class="text-muted mb-0" style="font-size: 1.05rem;">Welcome back, {{ auth()->user()->name }}. Here's an overview of your inquiry system.</p>
+    </div>
+
+    <!-- Main Superadmin Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card">
+                <i class="fas fa-users" style="font-size: 2rem; color: var(--primary-color);"></i>
+                <h3>{{ $totalUsers }}</h3>
+                <p>Total Users</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card" style="border-left-color: #7c3aed;">
+                <i class="fas fa-user-shield" style="font-size: 2rem; color: #7c3aed;"></i>
+                <h3>{{ $totalAdmins }}</h3>
+                <p>Department Admins</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card" style="border-left-color: #14b8a6;">
+                <i class="fas fa-building" style="font-size: 2rem; color: #14b8a6;"></i>
+                <h3>{{ $totalDepartments }}</h3>
+                <p>Departments</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card">
+                <i class="fas fa-file-alt" style="font-size: 2rem; color: var(--primary-color);"></i>
+                <h3>{{ $totalInquiries }}</h3>
+                <p>Total Inquiries</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--warning-color);">
+                <i class="fas fa-hourglass-half" style="font-size: 2rem; color: var(--warning-color);"></i>
+                <h3>{{ $pendingInquiries }}</h3>
+                <p>Pending</p>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--success-color);">
+                <i class="fas fa-check-circle" style="font-size: 2rem; color: var(--success-color);"></i>
+                <h3>{{ $resolvedInquiries }}</h3>
+                <p>Resolved</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Superadmin Control Center -->
+    <div class="card mb-5">
+        <div class="card-header section-card-header">
+            <h5 class="mb-0"><i class="fas fa-toolbox"></i> Superadmin Control Center</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.users.index') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-users"></i> Manage User Accounts
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.users.create-admin') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-user-shield"></i> Manage Department Admins
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.departments.index') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-building"></i> Manage Departments
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="#inquiry-master-table" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-table"></i> Monitor All Inquiries
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.analytics') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-chart-line"></i> System Reports and Analytics
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.role-permissions') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-user-lock"></i> Role and Permission Management
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.system-settings') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-sliders-h"></i> System Settings
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.audit-logs') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-clipboard-list"></i> Audit Logs
+                    </a>
+                </div>
+                <div class="col-xl-3 col-md-4 col-sm-6">
+                    <a href="{{ route('superadmin.maintenance') }}" class="btn btn-secondary w-100 text-start p-3">
+                        <i class="fas fa-database"></i> Backup and Maintenance
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Key Metrics Row -->

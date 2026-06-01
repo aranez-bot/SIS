@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Inquiry;
 use App\Models\Message;
-use App\Models\Notification;
+use App\Services\InquiryNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class MessageController extends Controller
 {
+    public function __construct(private InquiryNotificationService $notificationService)
+    {
+    }
+
     public function store(Request $request, Inquiry $inquiry)
     {
         $this->authorize('sendMessage', $inquiry);
@@ -41,28 +45,13 @@ class MessageController extends Controller
             ]);
         }
 
-        // Create notification for the other party
         if ($user->isStudent()) {
-            // Notify department admins
-            $admins = $inquiry->department->admins;
-            foreach ($admins as $admin) {
-                Notification::create([
-                    'user_id' => $admin->id,
-                    'inquiry_id' => $inquiry->id,
-                    'title' => 'New Message',
-                    'message' => $user->name . ' replied to inquiry: ' . $inquiry->subject,
-                    'type' => 'message_new',
-                ]);
-            }
+            $this->notificationService->notifyDepartmentHeadsOfStudentMessage($inquiry, $user);
         } else {
-            // Notify student
-            Notification::create([
-                'user_id' => $inquiry->student_id,
-                'inquiry_id' => $inquiry->id,
-                'title' => 'New Message',
-                'message' => 'Department replied to your inquiry: ' . $inquiry->subject,
-                'type' => 'message_new',
-            ]);
+            $this->notificationService->notifyStudentOfDepartmentResponse($inquiry, $user);
+
+            return redirect()->route('admin.dashboard')
+                ->with('success', 'Response sent successfully!');
         }
 
         return back()->with('success', 'Message sent successfully!');

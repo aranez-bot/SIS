@@ -36,13 +36,19 @@
                 <p>Resolved</p>
             </div>
         </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card" style="border-left-color: var(--muted-color);">
+                <i class="fas fa-lock" style="font-size: 2rem; color: var(--muted-color);"></i>
+                <h3>{{ $stats['closed'] }}</h3>
+                <p>Closed</p>
+            </div>
+        </div>
     </div>
-
     <div class="row">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header section-card-header">
-                    <h5 class="mb-0">Summary</h5>
+                    <h5 class="mb-0"><i class="fas fa-file-alt"></i> Department Report Summary</h5>
                 </div>
                 <div class="table-responsive">
                     <table class="table mb-0">
@@ -91,6 +97,31 @@
                     <p class="text-muted mb-0">
                         {{ $resolved }} of {{ $total }} inquiries completed
                     </p>
+                </div>
+            </div>
+
+            <div class="card mt-3" style="border-left: 4px solid var(--primary-color);">
+                <div class="card-header section-card-header">
+                    <h6 class="mb-0"><i class="fas fa-tags"></i> Frequently Asked Concerns</h6>
+                </div>
+                <div class="card-body">
+                    @forelse ($frequentConcerns as $concern)
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ Str::limit($concern->subject, 42) }}</span>
+                            <span class="badge bg-light text-dark">{{ $concern->total }}</span>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">No concern data yet.</p>
+                    @endforelse
+                    <hr>
+                    @forelse ($frequentCategories as $category)
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ ucfirst(str_replace('_', ' ', $category->category ?? 'general')) }}</span>
+                            <span class="badge bg-light text-dark">{{ $category->total }}</span>
+                        </div>
+                    @empty
+                        <p class="text-muted mb-0">No category data yet.</p>
+                    @endforelse
                 </div>
             </div>
         </div>

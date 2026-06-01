@@ -7,9 +7,14 @@
         <h1 class="mb-0">
             <i class="fas fa-users"></i> User Management
         </h1>
-        <a href="{{ route('superadmin.users.create-admin') }}" class="btn btn-primary">
-            <i class="fas fa-user-plus"></i> Create Admin
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('superadmin.users.create') }}" class="btn btn-secondary">
+                <i class="fas fa-user-plus"></i> Add User
+            </a>
+            <a href="{{ route('superadmin.users.create-admin') }}" class="btn btn-primary">
+                <i class="fas fa-user-shield"></i> Create Department Admin
+            </a>
+        </div>
     </div>
 
     <div class="card">
@@ -25,6 +30,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>User Type</th>
+                        <th>Status</th>
                         <th>Department</th>
                         <th>Joined</th>
                         <th>Actions</th>
@@ -55,6 +61,13 @@
                                 @endif
                             </td>
                             <td>
+                                @if ($user->is_active)
+                                    <span class="badge bg-success">Active</span>
+                                @else
+                                    <span class="badge bg-secondary">Inactive</span>
+                                @endif
+                            </td>
+                            <td>
                                 @if ($user->department)
                                     {{ $user->department->name }}
                                 @else
@@ -69,6 +82,13 @@
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 @if ($user->id !== auth()->id())
+                                    <form action="{{ route('superadmin.users.toggle-status', $user) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-sm btn-secondary">
+                                            <i class="fas fa-power-off"></i> {{ $user->is_active ? 'Deactivate' : 'Reactivate' }}
+                                        </button>
+                                    </form>
                                     <form action="{{ route('superadmin.users.delete', $user) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure?');">
                                         @csrf
                                         @method('DELETE')
@@ -81,7 +101,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">
+                            <td colspan="9" class="text-center py-4 text-muted">
                                 <i class="fas fa-inbox"></i> No users
                             </td>
                         </tr>

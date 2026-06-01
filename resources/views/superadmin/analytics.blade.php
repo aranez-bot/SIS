@@ -8,6 +8,37 @@
     </h1>
 
     <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card">
+                <i class="fas fa-file-alt"></i>
+                <h3>{{ $totalInquiries }}</h3>
+                <p>Total Inquiries</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--warning-color);">
+                <i class="fas fa-hourglass-half" style="color: var(--warning-color); background: #fff7ed;"></i>
+                <h3 style="color: var(--warning-color);">{{ $pendingInquiries }}</h3>
+                <p>Pending Inquiries</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--success-color);">
+                <i class="fas fa-check-circle" style="color: var(--success-color); background: #ecfdf5;"></i>
+                <h3 style="color: var(--success-color);">{{ $resolvedInquiries }}</h3>
+                <p>Resolved Inquiries</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card" style="border-left-color: var(--secondary-color);">
+                <i class="fas fa-clock" style="color: var(--secondary-color); background: #f0fdfa;"></i>
+                <h3 style="color: var(--secondary-color);">{{ $averageResponseTime ? $averageResponseTime . 'h' : '-' }}</h3>
+                <p>Avg. Response Time</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header section-card-header">
@@ -63,6 +94,44 @@
         </div>
     </div>
 
+    <div class="card mb-4">
+        <div class="card-header section-card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-building"></i> Department Performance
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Pending</th>
+                        <th class="text-center">Resolved</th>
+                        <th class="text-center">Resolution Rate</th>
+                        <th class="text-center">Avg. Response Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($departmentPerformance as $department)
+                        <tr>
+                            <td><strong>{{ $department['name'] }}</strong></td>
+                            <td class="text-center">{{ $department['total_received'] }}</td>
+                            <td class="text-center"><span class="badge bg-warning">{{ $department['pending'] }}</span></td>
+                            <td class="text-center"><span class="badge bg-success">{{ $department['resolved'] }}</span></td>
+                            <td class="text-center">{{ $department['resolution_rate'] }}%</td>
+                            <td class="text-center">{{ $department['avg_response_time'] ? $department['avg_response_time'] . ' hrs' : '-' }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No department data yet</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header section-card-header">
             <h5 class="mb-0">
@@ -78,18 +147,20 @@
                     </tr>
                     <tr>
                         <td>Total Inquiries</td>
-                        <td><strong>{{ array_sum($byStatus->toArray()) }}</strong></td>
+                        <td><strong>{{ $totalInquiries }}</strong></td>
                     </tr>
                     <tr>
                         <td>Average Resolution Rate</td>
                         <td>
                             @php
-                                $total = array_sum($byStatus->toArray());
-                                $resolved = $byStatus['resolved'] ?? 0;
-                                $rate = $total > 0 ? round(($resolved / $total) * 100, 2) : 0;
+                                $rate = $totalInquiries > 0 ? round(($resolvedInquiries / $totalInquiries) * 100, 2) : 0;
                             @endphp
                             <strong>{{ $rate }}%</strong>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>Average First Response Time</td>
+                        <td><strong>{{ $averageResponseTime ? $averageResponseTime . ' hours' : 'No replies yet' }}</strong></td>
                     </tr>
                     <tr>
                         <td>Total Departments</td>
