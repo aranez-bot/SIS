@@ -66,8 +66,12 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
             title: const Text('Confirm action'),
             content: Text(message),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-              FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Continue')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel')),
+              FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Continue')),
             ],
           ),
         ) ??
@@ -77,17 +81,22 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
   @override
   Widget build(BuildContext context) {
     final totalUsers = _users.length;
-    final activeUsers = _users.where((item) => item['is_active'] == true).length;
-    final departmentHeads = _users.where((item) => item['user_type'] == 'department_admin').length;
-    final students = _users.where((item) => item['user_type'] == 'student').length;
+    final activeUsers =
+        _users.where((item) => item['is_active'] == true).length;
+    final departmentHeads =
+        _users.where((item) => item['user_type'] == 'department_admin').length;
+    final students =
+        _users.where((item) => item['user_type'] == 'student').length;
 
     return _SuperadminScaffold(
       title: 'User and Admin Accounts',
-      subtitle: 'Add, edit, deactivate, or delete users and assign department admins.',
+      subtitle:
+          'Add, edit, deactivate, or delete users and assign department admins.',
       action: FilledButton.icon(
         style: FilledButton.styleFrom(
           minimumSize: const Size(146, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
         onPressed: () => _saveUser(),
         icon: const Icon(Icons.add),
@@ -100,18 +109,36 @@ class _SuperadminUsersScreenState extends State<SuperadminUsersScreen> {
               children: [
                 _AccountSummaryStrip(
                   items: [
-                    _AccountSummaryData(label: 'Total accounts', value: '$totalUsers', icon: Icons.people_alt_outlined, color: const Color(0xff4f67d8)),
-                    _AccountSummaryData(label: 'Active users', value: '$activeUsers', icon: Icons.verified_user_outlined, color: const Color(0xff4c9a73)),
-                    _AccountSummaryData(label: 'Department heads', value: '$departmentHeads', icon: Icons.business_center_outlined, color: const Color(0xff4fa7a1)),
-                    _AccountSummaryData(label: 'Students', value: '$students', icon: Icons.school_outlined, color: const Color(0xffc48a3a)),
+                    _AccountSummaryData(
+                        label: 'Total accounts',
+                        value: '$totalUsers',
+                        icon: Icons.people_alt_outlined,
+                        color: const Color(0xff4f67d8)),
+                    _AccountSummaryData(
+                        label: 'Active users',
+                        value: '$activeUsers',
+                        icon: Icons.verified_user_outlined,
+                        color: const Color(0xff4c9a73)),
+                    _AccountSummaryData(
+                        label: 'Department heads',
+                        value: '$departmentHeads',
+                        icon: Icons.business_center_outlined,
+                        color: const Color(0xff4fa7a1)),
+                    _AccountSummaryData(
+                        label: 'Students',
+                        value: '$students',
+                        icon: Icons.school_outlined,
+                        color: const Color(0xffc48a3a)),
                   ],
                 ),
                 const SizedBox(height: 18),
                 _UsersTable(
                   users: _users,
                   onEdit: (item) => _saveUser(Map<String, dynamic>.from(item)),
-                  onToggle: (item) => _toggleUser(Map<String, dynamic>.from(item)),
-                  onDelete: (item) => _deleteUser(Map<String, dynamic>.from(item)),
+                  onToggle: (item) =>
+                      _toggleUser(Map<String, dynamic>.from(item)),
+                  onDelete: (item) =>
+                      _deleteUser(Map<String, dynamic>.from(item)),
                 ),
               ],
             ),
@@ -142,13 +169,20 @@ class _AccountSummaryStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = constraints.maxWidth >= 1120 ? 4 : constraints.maxWidth >= 680 ? 2 : 1;
+        final columns = constraints.maxWidth >= 1120
+            ? 4
+            : constraints.maxWidth >= 680
+                ? 2
+                : 1;
         final width = (constraints.maxWidth - ((columns - 1) * 12)) / columns;
 
         return Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: items.map((item) => SizedBox(width: width, child: _AccountSummaryTile(item: item))).toList(),
+          children: items
+              .map((item) => SizedBox(
+                  width: width, child: _AccountSummaryTile(item: item)))
+              .toList(),
         );
       },
     );
@@ -177,9 +211,14 @@ class _AccountSummaryTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.value, style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: item.color, fontWeight: FontWeight.w800)),
+                Text(item.value,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: item.color, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 2),
-                Text(item.label, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xff718096), fontWeight: FontWeight.w700)),
+                Text(item.label,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Color(0xff718096), fontWeight: FontWeight.w700)),
               ],
             ),
           ),
@@ -217,9 +256,11 @@ class _UsersTable extends StatelessWidget {
               child: Icon(Icons.people_outline),
             ),
             SizedBox(height: 12),
-            Text('No accounts yet', style: TextStyle(fontWeight: FontWeight.w800)),
+            Text('No accounts yet',
+                style: TextStyle(fontWeight: FontWeight.w800)),
             SizedBox(height: 4),
-            Text('Created user and admin accounts will appear here.', style: TextStyle(color: Color(0xff718096))),
+            Text('Created user and admin accounts will appear here.',
+                style: TextStyle(color: Color(0xff718096))),
           ],
         ),
       );
@@ -237,7 +278,10 @@ class _UsersTable extends StatelessWidget {
                 color: const Color(0xff526074),
                 fontWeight: FontWeight.w800,
               ),
-          dataTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xff344054)),
+          dataTextStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: const Color(0xff344054)),
           columns: const [
             DataColumn(label: Text('Account')),
             DataColumn(label: Text('Email')),
@@ -254,7 +298,8 @@ class _UsersTable extends StatelessWidget {
                     DataCell(Text(item['email'] ?? '')),
                     DataCell(_RoleChip(role: item['user_type'] ?? '')),
                     DataCell(Text(item['department']?['name'] ?? '-')),
-                    DataCell(_AccountStatusChip(active: item['is_active'] == true)),
+                    DataCell(
+                        _AccountStatusChip(active: item['is_active'] == true)),
                     DataCell(
                       Row(
                         children: [
@@ -262,19 +307,28 @@ class _UsersTable extends StatelessWidget {
                             tooltip: 'Edit',
                             icon: Icons.edit_outlined,
                             color: const Color(0xff4f67d8),
-                            onPressed: () => onEdit(Map<String, dynamic>.from(item)),
+                            onPressed: () =>
+                                onEdit(Map<String, dynamic>.from(item)),
                           ),
                           _TableActionButton(
-                            tooltip: item['is_active'] == true ? 'Deactivate' : 'Activate',
-                            icon: item['is_active'] == true ? Icons.block : Icons.check_circle_outline,
-                            color: item['is_active'] == true ? const Color(0xffc48a3a) : const Color(0xff4c9a73),
-                            onPressed: () => onToggle(Map<String, dynamic>.from(item)),
+                            tooltip: item['is_active'] == true
+                                ? 'Deactivate'
+                                : 'Activate',
+                            icon: item['is_active'] == true
+                                ? Icons.block
+                                : Icons.check_circle_outline,
+                            color: item['is_active'] == true
+                                ? const Color(0xffc48a3a)
+                                : const Color(0xff4c9a73),
+                            onPressed: () =>
+                                onToggle(Map<String, dynamic>.from(item)),
                           ),
                           _TableActionButton(
                             tooltip: 'Delete',
                             icon: Icons.delete_outline,
                             color: const Color(0xffc75b68),
-                            onPressed: () => onDelete(Map<String, dynamic>.from(item)),
+                            onPressed: () =>
+                                onDelete(Map<String, dynamic>.from(item)),
                           ),
                         ],
                       ),
@@ -314,9 +368,14 @@ class _AccountNameCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w800)),
               if (identifier != null && identifier.isNotEmpty)
-                Text('ID: $identifier', overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xff718096), fontSize: 12)),
+                Text('ID: $identifier',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Color(0xff718096), fontSize: 12)),
             ],
           ),
         ),
@@ -357,7 +416,10 @@ class _AccountStatusChip extends StatelessWidget {
     final color = active ? const Color(0xff4c9a73) : const Color(0xffc75b68);
 
     return Chip(
-      avatar: Icon(active ? Icons.check_circle_outline : Icons.pause_circle_outline, size: 17, color: color),
+      avatar: Icon(
+          active ? Icons.check_circle_outline : Icons.pause_circle_outline,
+          size: 17,
+          color: color),
       label: Text(active ? 'Active' : 'Inactive'),
       backgroundColor: color.withValues(alpha: 0.12),
       labelStyle: TextStyle(color: color, fontWeight: FontWeight.w800),
@@ -388,7 +450,8 @@ class _TableActionButton extends StatelessWidget {
         style: IconButton.styleFrom(
           backgroundColor: color.withValues(alpha: 0.10),
           foregroundColor: color,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         icon: Icon(icon),
         onPressed: onPressed,
@@ -416,10 +479,12 @@ class SuperadminDepartmentsScreen extends StatefulWidget {
   const SuperadminDepartmentsScreen({super.key});
 
   @override
-  State<SuperadminDepartmentsScreen> createState() => _SuperadminDepartmentsScreenState();
+  State<SuperadminDepartmentsScreen> createState() =>
+      _SuperadminDepartmentsScreenState();
 }
 
-class _SuperadminDepartmentsScreenState extends State<SuperadminDepartmentsScreen> {
+class _SuperadminDepartmentsScreenState
+    extends State<SuperadminDepartmentsScreen> {
   final _api = ApiService();
   List<dynamic> _departments = [];
   bool _loading = true;
@@ -460,10 +525,15 @@ class _SuperadminDepartmentsScreenState extends State<SuperadminDepartmentsScree
           context: context,
           builder: (_) => AlertDialog(
             title: const Text('Delete department?'),
-            content: Text('Delete ${department['name']}? Departments with inquiries cannot be deleted.'),
+            content: Text(
+                'Delete ${department['name']}? Departments with inquiries cannot be deleted.'),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-              FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+              TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Cancel')),
+              FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Delete')),
             ],
           ),
         ) ??
@@ -477,17 +547,22 @@ class _SuperadminDepartmentsScreenState extends State<SuperadminDepartmentsScree
   @override
   Widget build(BuildContext context) {
     final totalDepartments = _departments.length;
-    final activeDepartments = _departments.where((item) => item['is_active'] == true).length;
-    final totalAdmins = _departments.fold<int>(0, (sum, item) => sum + _asInt(item['admins_count']));
-    final totalInquiries = _departments.fold<int>(0, (sum, item) => sum + _asInt(item['inquiries_count']));
+    final activeDepartments =
+        _departments.where((item) => item['is_active'] == true).length;
+    final totalAdmins = _departments.fold<int>(
+        0, (sum, item) => sum + _asInt(item['admins_count']));
+    final totalInquiries = _departments.fold<int>(
+        0, (sum, item) => sum + _asInt(item['inquiries_count']));
 
     return _SuperadminScaffold(
       title: 'Departments',
-      subtitle: 'Add, edit, deactivate, or remove departments included in the inquiry system.',
+      subtitle:
+          'Add, edit, deactivate, or remove departments included in the inquiry system.',
       action: FilledButton.icon(
         style: FilledButton.styleFrom(
           minimumSize: const Size(164, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
         onPressed: () => _saveDepartment(),
         icon: const Icon(Icons.add_business),
@@ -500,17 +575,35 @@ class _SuperadminDepartmentsScreenState extends State<SuperadminDepartmentsScree
               children: [
                 _AccountSummaryStrip(
                   items: [
-                    _AccountSummaryData(label: 'Departments', value: '$totalDepartments', icon: Icons.business_outlined, color: const Color(0xff4f67d8)),
-                    _AccountSummaryData(label: 'Active', value: '$activeDepartments', icon: Icons.verified_outlined, color: const Color(0xff4c9a73)),
-                    _AccountSummaryData(label: 'Admins', value: '$totalAdmins', icon: Icons.manage_accounts_outlined, color: const Color(0xff4fa7a1)),
-                    _AccountSummaryData(label: 'Inquiries', value: '$totalInquiries', icon: Icons.inbox_outlined, color: const Color(0xffc48a3a)),
+                    _AccountSummaryData(
+                        label: 'Departments',
+                        value: '$totalDepartments',
+                        icon: Icons.business_outlined,
+                        color: const Color(0xff4f67d8)),
+                    _AccountSummaryData(
+                        label: 'Active',
+                        value: '$activeDepartments',
+                        icon: Icons.verified_outlined,
+                        color: const Color(0xff4c9a73)),
+                    _AccountSummaryData(
+                        label: 'Admins',
+                        value: '$totalAdmins',
+                        icon: Icons.manage_accounts_outlined,
+                        color: const Color(0xff4fa7a1)),
+                    _AccountSummaryData(
+                        label: 'Inquiries',
+                        value: '$totalInquiries',
+                        icon: Icons.inbox_outlined,
+                        color: const Color(0xffc48a3a)),
                   ],
                 ),
                 const SizedBox(height: 18),
                 _DepartmentsTable(
                   departments: _departments,
-                  onEdit: (item) => _saveDepartment(Map<String, dynamic>.from(item)),
-                  onDelete: (item) => _deleteDepartment(Map<String, dynamic>.from(item)),
+                  onEdit: (item) =>
+                      _saveDepartment(Map<String, dynamic>.from(item)),
+                  onDelete: (item) =>
+                      _deleteDepartment(Map<String, dynamic>.from(item)),
                 ),
               ],
             ),
@@ -544,9 +637,11 @@ class _DepartmentsTable extends StatelessWidget {
               child: Icon(Icons.business_outlined),
             ),
             SizedBox(height: 12),
-            Text('No departments yet', style: TextStyle(fontWeight: FontWeight.w800)),
+            Text('No departments yet',
+                style: TextStyle(fontWeight: FontWeight.w800)),
             SizedBox(height: 4),
-            Text('Created departments will appear here.', style: TextStyle(color: Color(0xff718096))),
+            Text('Created departments will appear here.',
+                style: TextStyle(color: Color(0xff718096))),
           ],
         ),
       );
@@ -564,7 +659,10 @@ class _DepartmentsTable extends StatelessWidget {
                 color: const Color(0xff526074),
                 fontWeight: FontWeight.w800,
               ),
-          dataTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: const Color(0xff344054)),
+          dataTextStyle: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(color: const Color(0xff344054)),
           columns: const [
             DataColumn(label: Text('Department')),
             DataColumn(label: Text('Email')),
@@ -581,7 +679,8 @@ class _DepartmentsTable extends StatelessWidget {
                     DataCell(Text(item['email'] ?? '')),
                     DataCell(Text('${item['admins_count'] ?? 0}')),
                     DataCell(Text('${item['inquiries_count'] ?? 0}')),
-                    DataCell(_AccountStatusChip(active: item['is_active'] == true)),
+                    DataCell(
+                        _AccountStatusChip(active: item['is_active'] == true)),
                     DataCell(
                       Row(
                         children: [
@@ -589,13 +688,15 @@ class _DepartmentsTable extends StatelessWidget {
                             tooltip: 'Edit',
                             icon: Icons.edit_outlined,
                             color: const Color(0xff4f67d8),
-                            onPressed: () => onEdit(Map<String, dynamic>.from(item)),
+                            onPressed: () =>
+                                onEdit(Map<String, dynamic>.from(item)),
                           ),
                           _TableActionButton(
                             tooltip: 'Delete',
                             icon: Icons.delete_outline,
                             color: const Color(0xffc75b68),
-                            onPressed: () => onDelete(Map<String, dynamic>.from(item)),
+                            onPressed: () =>
+                                onDelete(Map<String, dynamic>.from(item)),
                           ),
                         ],
                       ),
@@ -635,9 +736,14 @@ class _DepartmentNameCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(name, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w800)),
+              Text(name,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w800)),
               if (description != null && description.isNotEmpty)
-                Text(description, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Color(0xff718096), fontSize: 12)),
+                Text(description,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Color(0xff718096), fontSize: 12)),
             ],
           ),
         ),
@@ -650,7 +756,8 @@ class SuperadminAnalyticsScreen extends StatefulWidget {
   const SuperadminAnalyticsScreen({super.key});
 
   @override
-  State<SuperadminAnalyticsScreen> createState() => _SuperadminAnalyticsScreenState();
+  State<SuperadminAnalyticsScreen> createState() =>
+      _SuperadminAnalyticsScreenState();
 }
 
 class _SuperadminAnalyticsScreenState extends State<SuperadminAnalyticsScreen> {
@@ -684,12 +791,26 @@ class _SuperadminAnalyticsScreenState extends State<SuperadminAnalyticsScreen> {
               children: [
                 _AccountSummaryStrip(
                   items: [
-                    _AccountSummaryData(label: 'Total inquiries', value: '${summary['total_inquiries'] ?? 0}', icon: Icons.inbox_outlined, color: const Color(0xff4f67d8)),
-                    _AccountSummaryData(label: 'Pending', value: '${summary['pending_inquiries'] ?? 0}', icon: Icons.hourglass_top_outlined, color: const Color(0xffc48a3a)),
-                    _AccountSummaryData(label: 'Resolved', value: '${summary['resolved_inquiries'] ?? 0}', icon: Icons.check_circle_outline, color: const Color(0xff4c9a73)),
+                    _AccountSummaryData(
+                        label: 'Total inquiries',
+                        value: '${summary['total_inquiries'] ?? 0}',
+                        icon: Icons.inbox_outlined,
+                        color: const Color(0xff4f67d8)),
+                    _AccountSummaryData(
+                        label: 'Pending',
+                        value: '${summary['pending_inquiries'] ?? 0}',
+                        icon: Icons.hourglass_top_outlined,
+                        color: const Color(0xffc48a3a)),
+                    _AccountSummaryData(
+                        label: 'Resolved',
+                        value: '${summary['resolved_inquiries'] ?? 0}',
+                        icon: Icons.check_circle_outline,
+                        color: const Color(0xff4c9a73)),
                     _AccountSummaryData(
                       label: 'Avg. response',
-                      value: summary['average_response_time'] == null ? '-' : '${summary['average_response_time']} hrs',
+                      value: summary['average_response_time'] == null
+                          ? '-'
+                          : '${summary['average_response_time']} hrs',
                       icon: Icons.schedule_outlined,
                       color: const Color(0xff4fa7a1),
                     ),
@@ -718,9 +839,14 @@ class _DepartmentPerformanceTable extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Department Performance', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800, color: const Color(0xff253044))),
+            Text('Department Performance',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xff253044))),
             const SizedBox(height: 4),
-            const Text('Compare inquiry volume and resolution progress across departments.', style: TextStyle(color: Color(0xff718096))),
+            const Text(
+                'Compare inquiry volume and resolution progress across departments.',
+                style: TextStyle(color: Color(0xff718096))),
             const SizedBox(height: 14),
             if (departments.isEmpty)
               const Text('No department performance data yet.')
@@ -729,11 +855,13 @@ class _DepartmentPerformanceTable extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   dividerThickness: 0.6,
-                  headingRowColor: WidgetStateProperty.all(const Color(0xfff6f9fd)),
-                  headingTextStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: const Color(0xff526074),
-                        fontWeight: FontWeight.w800,
-                      ),
+                  headingRowColor:
+                      WidgetStateProperty.all(const Color(0xfff6f9fd)),
+                  headingTextStyle:
+                      Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: const Color(0xff526074),
+                            fontWeight: FontWeight.w800,
+                          ),
                   columns: const [
                     DataColumn(label: Text('Department')),
                     DataColumn(label: Text('Total')),
@@ -741,25 +869,27 @@ class _DepartmentPerformanceTable extends StatelessWidget {
                     DataColumn(label: Text('Resolved')),
                     DataColumn(label: Text('Resolution')),
                   ],
-                  rows: departments
-                      .map(
-                        (item) {
-                          final total = _asInt(item['total']);
-                          final resolved = _asInt(item['resolved']);
-                          final rate = total == 0 ? 0 : ((resolved / total) * 100).round();
+                  rows: departments.map(
+                    (item) {
+                      final total = _asInt(item['total']);
+                      final resolved = _asInt(item['resolved']);
+                      final rate =
+                          total == 0 ? 0 : ((resolved / total) * 100).round();
 
-                          return DataRow(
-                            cells: [
-                              DataCell(Text(item['name'] ?? '', style: const TextStyle(fontWeight: FontWeight.w800))),
-                              DataCell(Text('$total')),
-                              DataCell(Text('${item['pending'] ?? 0}')),
-                              DataCell(Text('$resolved')),
-                              DataCell(_MiniProgress(value: rate, color: const Color(0xff4c9a73))),
-                            ],
-                          );
-                        },
-                      )
-                      .toList(),
+                      return DataRow(
+                        cells: [
+                          DataCell(Text(item['name'] ?? '',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w800))),
+                          DataCell(Text('$total')),
+                          DataCell(Text('${item['pending'] ?? 0}')),
+                          DataCell(Text('$resolved')),
+                          DataCell(_MiniProgress(
+                              value: rate, color: const Color(0xff4c9a73))),
+                        ],
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
           ],
@@ -793,7 +923,8 @@ class _MiniProgress extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text('$value%', style: TextStyle(color: color, fontWeight: FontWeight.w800)),
+          Text('$value%',
+              style: TextStyle(color: color, fontWeight: FontWeight.w800)),
         ],
       ),
     );
@@ -815,10 +946,12 @@ class SuperadminSimpleDataScreen extends StatefulWidget {
   final IconData icon;
 
   @override
-  State<SuperadminSimpleDataScreen> createState() => _SuperadminSimpleDataScreenState();
+  State<SuperadminSimpleDataScreen> createState() =>
+      _SuperadminSimpleDataScreenState();
 }
 
-class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen> {
+class _SuperadminSimpleDataScreenState
+    extends State<SuperadminSimpleDataScreen> {
   final _api = ApiService();
   Map<String, dynamic>? _data;
 
@@ -839,7 +972,8 @@ class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen>
     return _SuperadminScaffold(
       title: widget.title,
       subtitle: widget.subtitle,
-      action: IconButton.filledTonal(onPressed: _load, icon: const Icon(Icons.refresh)),
+      action: IconButton.filledTonal(
+          onPressed: _load, icon: const Icon(Icons.refresh)),
       child: _data == null
           ? const Center(child: CircularProgressIndicator())
           : _buildContent(context),
@@ -862,13 +996,15 @@ class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(entry.key, style: Theme.of(context).textTheme.titleMedium),
+                        Text(entry.key,
+                            style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 10),
                         for (final permission in entry.value)
                           ListTile(
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.check_circle_outline, size: 18),
+                            leading: const Icon(Icons.check_circle_outline,
+                                size: 18),
                             title: Text('$permission'),
                           ),
                       ],
@@ -892,12 +1028,16 @@ class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(_label(entry.key), style: Theme.of(context).textTheme.titleMedium),
+                    Text(_label(entry.key),
+                        style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: [for (final item in entry.value) Chip(label: Text(_label('$item')))],
+                      children: [
+                        for (final item in entry.value)
+                          Chip(label: Text(_label('$item')))
+                      ],
                     ),
                   ],
                 ),
@@ -912,8 +1052,12 @@ class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _JsonSection(title: 'Recent Users', items: _data?['users'] ?? []),
-          _JsonSection(title: 'Recent Inquiry Updates', items: _data?['inquiries'] ?? []),
-          _JsonSection(title: 'Recent Notifications', items: _data?['notifications'] ?? []),
+          _JsonSection(
+              title: 'Recent Inquiry Updates',
+              items: _data?['inquiries'] ?? []),
+          _JsonSection(
+              title: 'Recent Notifications',
+              items: _data?['notifications'] ?? []),
         ],
       );
     }
@@ -925,14 +1069,19 @@ class _SuperadminSimpleDataScreenState extends State<SuperadminSimpleDataScreen>
         Wrap(
           spacing: 12,
           runSpacing: 12,
-          children: summary.entries.map((entry) => _MetricTile(label: _label(entry.key), value: '${entry.value}')).toList(),
+          children: summary.entries
+              .map((entry) => _MetricTile(
+                  label: _label(entry.key), value: '${entry.value}'))
+              .toList(),
         ),
         const SizedBox(height: 18),
-        Text('Latest Backup Snapshot', style: Theme.of(context).textTheme.titleLarge),
+        Text('Latest Backup Snapshot',
+            style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(height: 8),
         Text('Generated at: ${_data?['generated_at'] ?? '-'}'),
         const SizedBox(height: 12),
-        const Text('Backup data is available through the secured superadmin API endpoint.'),
+        const Text(
+            'Backup data is available through the secured superadmin API endpoint.'),
       ],
     );
   }
@@ -980,29 +1129,45 @@ class _UserDialogState extends State<_UserDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: _name, decoration: const InputDecoration(labelText: 'Name')),
+              TextField(
+                  controller: _name,
+                  decoration: const InputDecoration(labelText: 'Name')),
               const SizedBox(height: 10),
-              TextField(controller: _identifier, decoration: const InputDecoration(labelText: 'ID / Identifier')),
+              TextField(
+                  controller: _identifier,
+                  decoration:
+                      const InputDecoration(labelText: 'ID / Identifier')),
               const SizedBox(height: 10),
-              TextField(controller: _email, decoration: const InputDecoration(labelText: 'Email')),
+              TextField(
+                  controller: _email,
+                  decoration: const InputDecoration(labelText: 'Email')),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
                 initialValue: _userType,
                 decoration: const InputDecoration(labelText: 'Role'),
                 items: const [
                   DropdownMenuItem(value: 'student', child: Text('Student')),
-                  DropdownMenuItem(value: 'department_admin', child: Text('Department Admin')),
-                  DropdownMenuItem(value: 'super_admin', child: Text('Superadmin')),
+                  DropdownMenuItem(
+                      value: 'department_admin',
+                      child: Text('Department Admin')),
+                  DropdownMenuItem(
+                      value: 'super_admin', child: Text('Superadmin')),
                 ],
-                onChanged: (value) => setState(() => _userType = value ?? 'student'),
+                onChanged: (value) =>
+                    setState(() => _userType = value ?? 'student'),
               ),
               if (_userType == 'department_admin') ...[
                 const SizedBox(height: 10),
                 DropdownButtonFormField<int>(
-                  initialValue: widget.departments.any((item) => item['id'] == _departmentId) ? _departmentId : null,
+                  initialValue: widget.departments
+                          .any((item) => item['id'] == _departmentId)
+                      ? _departmentId
+                      : null,
                   decoration: const InputDecoration(labelText: 'Department'),
                   items: widget.departments
-                      .map((item) => DropdownMenuItem(value: item['id'] as int, child: Text(item['name'] ?? '')))
+                      .map((item) => DropdownMenuItem(
+                          value: item['id'] as int,
+                          child: Text(item['name'] ?? '')))
                       .toList(),
                   onChanged: (value) => _departmentId = value,
                 ),
@@ -1011,7 +1176,9 @@ class _UserDialogState extends State<_UserDialog> {
               TextField(
                 controller: _password,
                 obscureText: true,
-                decoration: InputDecoration(labelText: widget.user == null ? 'Password' : 'New password'),
+                decoration: InputDecoration(
+                    labelText:
+                        widget.user == null ? 'Password' : 'New password'),
               ),
               const SizedBox(height: 10),
               SwitchListTile(
@@ -1025,16 +1192,21 @@ class _UserDialogState extends State<_UserDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel')),
         FilledButton(
           onPressed: () {
             final password = _password.text.trim();
             Navigator.pop(context, {
               'name': _name.text.trim(),
-              'user_identifier': _identifier.text.trim().isEmpty ? null : _identifier.text.trim(),
+              'user_identifier': _identifier.text.trim().isEmpty
+                  ? null
+                  : _identifier.text.trim(),
               'email': _email.text.trim(),
               'user_type': _userType,
-              'department_id': _userType == 'department_admin' ? _departmentId : null,
+              'department_id':
+                  _userType == 'department_admin' ? _departmentId : null,
               'password': password.isEmpty ? null : password,
               'password_confirmation': password.isEmpty ? null : password,
               'is_active': _isActive,
@@ -1070,31 +1242,44 @@ class _DepartmentDialogState extends State<_DepartmentDialog> {
     final department = widget.department;
     _name = TextEditingController(text: department?['name'] ?? '');
     _email = TextEditingController(text: department?['email'] ?? '');
-    _description = TextEditingController(text: department?['description'] ?? '');
+    _description =
+        TextEditingController(text: department?['description'] ?? '');
     _phone = TextEditingController(text: department?['phone'] ?? '');
-    _officeHours = TextEditingController(text: department?['office_hours'] ?? '');
+    _officeHours =
+        TextEditingController(text: department?['office_hours'] ?? '');
     _isActive = department?['is_active'] ?? true;
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.department == null ? 'Add Department' : 'Edit Department'),
+      title: Text(
+          widget.department == null ? 'Add Department' : 'Edit Department'),
       content: SizedBox(
         width: 480,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: _name, decoration: const InputDecoration(labelText: 'Name')),
+              TextField(
+                  controller: _name,
+                  decoration: const InputDecoration(labelText: 'Name')),
               const SizedBox(height: 10),
-              TextField(controller: _email, decoration: const InputDecoration(labelText: 'Email')),
+              TextField(
+                  controller: _email,
+                  decoration: const InputDecoration(labelText: 'Email')),
               const SizedBox(height: 10),
-              TextField(controller: _description, decoration: const InputDecoration(labelText: 'Description')),
+              TextField(
+                  controller: _description,
+                  decoration: const InputDecoration(labelText: 'Description')),
               const SizedBox(height: 10),
-              TextField(controller: _phone, decoration: const InputDecoration(labelText: 'Phone')),
+              TextField(
+                  controller: _phone,
+                  decoration: const InputDecoration(labelText: 'Phone')),
               const SizedBox(height: 10),
-              TextField(controller: _officeHours, decoration: const InputDecoration(labelText: 'Office hours')),
+              TextField(
+                  controller: _officeHours,
+                  decoration: const InputDecoration(labelText: 'Office hours')),
               const SizedBox(height: 10),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
@@ -1107,7 +1292,9 @@ class _DepartmentDialogState extends State<_DepartmentDialog> {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel')),
         FilledButton(
           onPressed: () => Navigator.pop(context, {
             'name': _name.text.trim(),
@@ -1174,11 +1361,19 @@ class _SuperadminScaffold extends StatelessWidget {
                   final heading = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800)),
+                      Text(title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800)),
                       const SizedBox(height: 8),
                       Text(
                         subtitle,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white.withValues(alpha: 0.82), height: 1.42),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.82),
+                            height: 1.42),
                       ),
                     ],
                   );
@@ -1266,8 +1461,15 @@ class _JsonSection extends StatelessWidget {
             for (final item in items)
               Card(
                 child: ListTile(
-                  title: Text(item['title'] ?? item['subject'] ?? item['name'] ?? 'Record #${item['id']}'),
-                  subtitle: Text(item['message'] ?? item['email'] ?? item['status'] ?? item['created_at'] ?? ''),
+                  title: Text(item['title'] ??
+                      item['subject'] ??
+                      item['name'] ??
+                      'Record #${item['id']}'),
+                  subtitle: Text(item['message'] ??
+                      item['email'] ??
+                      item['status'] ??
+                      item['created_at'] ??
+                      ''),
                 ),
               ),
         ],
@@ -1278,7 +1480,8 @@ class _JsonSection extends StatelessWidget {
 
 String _label(String value) => value
     .split('_')
-    .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+    .map((word) =>
+        word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
     .join(' ');
 
 int _asInt(dynamic value) {

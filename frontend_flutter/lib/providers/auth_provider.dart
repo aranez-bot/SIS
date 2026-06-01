@@ -40,7 +40,8 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await api.post('/login', {'email': email, 'password': password});
+      final response =
+          await api.post('/login', {'email': email, 'password': password});
       token = response['token'];
       api.token = token;
       ApiService.sharedToken = token;

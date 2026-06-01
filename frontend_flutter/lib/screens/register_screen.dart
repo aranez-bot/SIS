@@ -53,7 +53,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: 'Juan Dela Cruz',
                   icon: Icons.person_outline,
                   textInputAction: TextInputAction.next,
-                  validator: (value) => value == null || value.trim().isEmpty ? 'Name is required' : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Name is required'
+                      : null,
                 ),
                 StudentAuthTextField(
                   controller: _userIdentifier,
@@ -61,7 +63,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hintText: 'STU-2026-001',
                   icon: Icons.badge_outlined,
                   textInputAction: TextInputAction.next,
-                  validator: (value) => value == null || value.trim().isEmpty ? 'Student ID is required' : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Student ID is required'
+                      : null,
                 ),
               ],
             ),
@@ -74,8 +78,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               validator: (value) {
-                if (value == null || value.trim().isEmpty) return 'Email is required';
-                if (!value.contains('@')) return 'Enter a valid email';
+                if (value == null || value.trim().isEmpty) {
+                  return 'Email is required';
+                }
+                if (!value.contains('@')) {
+                  return 'Enter a valid email';
+                }
                 return null;
               },
             ),
@@ -91,14 +99,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: !_showPassword,
                   textInputAction: TextInputAction.next,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Password is required';
-                    if (value.length < 8) return 'Password must be at least 8 characters';
+                    if (value == null || value.isEmpty) {
+                      return 'Password is required';
+                    }
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
+                    }
                     return null;
                   },
                   suffix: IconButton(
                     tooltip: _showPassword ? 'Hide password' : 'Show password',
-                    onPressed: () => setState(() => _showPassword = !_showPassword),
-                    icon: Icon(_showPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                    onPressed: () =>
+                        setState(() => _showPassword = !_showPassword),
+                    icon: Icon(_showPassword
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined),
                   ),
                 ),
                 StudentAuthTextField(
@@ -108,21 +123,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Icons.lock_outline,
                   obscureText: !_showConfirmation,
                   validator: (value) {
-                    if (value == null || value.isEmpty) return 'Please confirm your password';
-                    if (value != _password.text) return 'Passwords do not match';
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+                    if (value != _password.text) {
+                      return 'Passwords do not match';
+                    }
                     return null;
                   },
                   suffix: IconButton(
-                    tooltip: _showConfirmation ? 'Hide password' : 'Show password',
-                    onPressed: () => setState(() => _showConfirmation = !_showConfirmation),
-                    icon: Icon(_showConfirmation ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                    tooltip:
+                        _showConfirmation ? 'Hide password' : 'Show password',
+                    onPressed: () =>
+                        setState(() => _showConfirmation = !_showConfirmation),
+                    icon: Icon(_showConfirmation
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined),
                   ),
                 ),
               ],
             ),
             if (auth.error != null) ...[
               const SizedBox(height: 14),
-              Text(auth.error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              Text(auth.error!,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ],
             const SizedBox(height: 26),
             StudentAuthSubmitButton(
@@ -137,10 +161,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Text(
                   'Already have an account? ',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff7d8797)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: const Color(0xff7d8797)),
                 ),
                 TextButton(
-                  onPressed: auth.isLoading ? null : () => Navigator.pop(context),
+                  onPressed:
+                      auth.isLoading ? null : () => Navigator.pop(context),
                   child: const Text('Sign in'),
                 ),
               ],

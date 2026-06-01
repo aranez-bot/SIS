@@ -14,6 +14,7 @@ import 'screens/mobile_app_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/superadmin_screens.dart';
+import 'widgets/app_ui.dart';
 
 void main() {
   runApp(const InquiryApp());
@@ -36,20 +37,63 @@ class InquiryApp extends StatelessWidget {
         title: 'Inquiry System',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff2563eb)),
-          scaffoldBackgroundColor: const Color(0xfff6f8fb),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            surface: AppColors.surface,
+          ),
+          scaffoldBackgroundColor: AppColors.background,
           fontFamily: 'Roboto',
           useMaterial3: true,
           cardTheme: CardThemeData(
-            color: Colors.white,
-            elevation: 1,
-            shadowColor: const Color(0xff0f172a).withValues(alpha: 0.08),
-            surfaceTintColor: Colors.white,
+            color: AppColors.surface,
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            surfaceTintColor: AppColors.surface,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          inputDecorationTheme:
-              const InputDecorationTheme(border: OutlineInputBorder()),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: AppColors.surface,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: AppColors.border),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+                  const BorderSide(color: AppColors.primary, width: 1.4),
+            ),
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              minimumSize: const Size(48, 46),
+              textStyle: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              minimumSize: const Size(48, 46),
+              side: const BorderSide(color: AppColors.border),
+              textStyle: const TextStyle(fontWeight: FontWeight.w800),
+            ),
+          ),
+          navigationBarTheme: NavigationBarThemeData(
+            backgroundColor: AppColors.surface,
+            elevation: 0,
+            indicatorColor: AppColors.primary.withValues(alpha: 0.10),
+            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+            labelTextStyle: WidgetStateProperty.all(
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+            ),
+          ),
         ),
         home: const AuthGate(),
       ),
@@ -116,6 +160,7 @@ class _ShellScreenState extends State<ShellScreen> {
       bottomNavigationBar: isDesktop
           ? null
           : NavigationBar(
+              height: 68,
               selectedIndex: mobileSelectedIndex < 0 ? 0 : mobileSelectedIndex,
               onDestinationSelected: (value) {
                 final destination = mobileDestinations[value];
@@ -263,6 +308,7 @@ class _ShellScreenState extends State<ShellScreen> {
         label: 'Download APK',
         mobileLabel: 'APK',
         screen: MobileAppScreen(),
+        showOnMobile: false,
       ),
       _ShellDestination(
         icon: Icons.settings_outlined,

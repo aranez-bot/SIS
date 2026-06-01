@@ -26,18 +26,33 @@ class StudentController extends Controller
     public function mobileApp()
     {
         $apkPath = public_path('downloads/student-inquiry.apk');
-        $apkExists = file_exists($apkPath);
+        $apkDownloadUrl = config('mobile.apk_download_url');
+        $apkFileName = config('mobile.apk_file_name', 'student-inquiry.apk');
+        $usesReleaseAsset = filled($apkDownloadUrl);
+        $apkExists = $usesReleaseAsset || file_exists($apkPath);
 
         return view('student.mobile-app', [
             'apkExists' => $apkExists,
-            'apkFileName' => 'student-inquiry.apk',
-            'apkSize' => $apkExists ? $this->formatBytes(filesize($apkPath)) : null,
-            'apkUpdatedAt' => $apkExists ? date('M d, Y h:i A', filemtime($apkPath)) : null,
+            'apkFileName' => $apkFileName,
+            'apkSize' => $usesReleaseAsset
+                ? 'GitHub Release'
+                : ($apkExists ? $this->formatBytes(filesize($apkPath)) : null),
+            'apkUpdatedAt' => $usesReleaseAsset
+                ? 'Latest release'
+                : ($apkExists ? date('M d, Y h:i A', filemtime($apkPath)) : null),
+            'apkSource' => $usesReleaseAsset ? 'GitHub Releases' : 'Local storage',
+            'apkDownloadUrl' => $usesReleaseAsset
+                ? $apkDownloadUrl
+                : route('mobile-app.download'),
         ]);
     }
 
     public function downloadMobileApp()
     {
+        if (filled(config('mobile.apk_download_url'))) {
+            return redirect()->away(config('mobile.apk_download_url'));
+        }
+
         $apkPath = public_path('downloads/student-inquiry.apk');
 
         if (! file_exists($apkPath)) {

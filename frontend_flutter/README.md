@@ -32,3 +32,17 @@ For the Android emulator, use:
 ```bash
 flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000/api
 ```
+
+## Production Build
+
+Build the Android APK for the Alwaysdata API and GitHub Releases download URL:
+
+```bash
+flutter build apk --release --dart-define=API_BASE_URL=https://yourname.alwaysdata.net/api --dart-define=APK_DOWNLOAD_URL=https://github.com/aranez-bot/SIS/releases/latest/download/student-inquiry.apk
+```
+
+Build Flutter web against the hosted API:
+
+```bash
+flutter build web --release --dart-define=API_BASE_URL=https://yourname.alwaysdata.net/api --dart-define=APK_DOWNLOAD_URL=https://github.com/aranez-bot/SIS/releases/latest/download/student-inquiry.apk
+```

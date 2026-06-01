@@ -1,0 +1,68 @@
+name: Release Android APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to create or update, for example v1.0.0'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    env:
+      API_BASE_URL: ${{ vars.API_BASE_URL != '' && vars.API_BASE_URL || 'https://yourname.alwaysdata.net/api' }}
+      APK_DOWNLOAD_URL: ${{ vars.APK_DOWNLOAD_URL != '' && vars.APK_DOWNLOAD_URL || format('https://github.com/{0}/releases/latest/download/student-inquiry.apk', github.repository) }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        working-directory: frontend_flutter
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: frontend_flutter
+        run: flutter analyze
+
+      - name: Test
+        working-directory: frontend_flutter
+        run: flutter test
+
+      - name: Build APK
+        working-directory: frontend_flutter
+        run: |
+          flutter build apk --release \
+            --dart-define=API_BASE_URL="$API_BASE_URL" \
+            --dart-define=APK_DOWNLOAD_URL="$APK_DOWNLOAD_URL"
+
+      - name: Prepare asset
+        run: cp frontend_flutter/build/app/outputs/flutter-apk/app-release.apk student-inquiry.apk
+
+      - name: Publish release asset
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then
+            TAG_NAME="${{ inputs.tag }}"
+          fi
+
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" student-inquiry.apk --clobber
+          else
+            gh release create "$TAG_NAME" student-inquiry.apk --title "$TAG_NAME" --notes "Student Inquiry Android APK"
+          fi

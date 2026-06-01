@@ -467,7 +467,7 @@ class _StatusBreakdownPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _PanelTitle(
+          const _PanelTitle(
               icon: Icons.stacked_bar_chart_outlined,
               title: 'Status Breakdown'),
           const SizedBox(height: 18),
@@ -835,8 +835,10 @@ class _DepartmentFaqManagerScreenState
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-        () => context.read<InquiryProvider>().loadDepartmentFaqs());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<InquiryProvider>().loadDepartmentFaqs();
+    });
   }
 
   @override

@@ -19,9 +19,10 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PageController::class, 'welcome']);
+
+Route::get('/mobile-app', [StudentController::class, 'mobileApp'])->name('mobile-app');
+Route::get('/mobile-app/download', [StudentController::class, 'downloadMobileApp'])->name('mobile-app.download');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

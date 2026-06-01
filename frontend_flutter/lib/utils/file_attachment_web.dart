@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_web_libraries_in_flutter, deprecated_member_use
 
 import 'dart:async';
 import 'dart:html' as html;
@@ -22,11 +22,14 @@ Future<PickedAttachment?> pickAttachmentFile() {
 
     final reader = html.FileReader();
     reader.onError.first.then((_) {
-      if (!completer.isCompleted) completer.completeError('Unable to read file.');
+      if (!completer.isCompleted) {
+        completer.completeError('Unable to read file.');
+      }
     });
     reader.onLoadEnd.first.then((_) {
       final result = reader.result;
-      final bytes = result is ByteBuffer ? Uint8List.view(result) : Uint8List(0);
+      final bytes =
+          result is ByteBuffer ? Uint8List.view(result) : Uint8List(0);
       if (!completer.isCompleted) {
         completer.complete(PickedAttachment(
           name: file.name,

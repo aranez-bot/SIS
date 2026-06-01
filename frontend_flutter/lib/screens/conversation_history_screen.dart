@@ -8,7 +8,8 @@ class ConversationHistoryScreen extends StatefulWidget {
   const ConversationHistoryScreen({super.key});
 
   @override
-  State<ConversationHistoryScreen> createState() => _ConversationHistoryScreenState();
+  State<ConversationHistoryScreen> createState() =>
+      _ConversationHistoryScreenState();
 }
 
 class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
@@ -23,7 +24,8 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
   Future<List<Inquiry>> _load() async {
     final provider = context.read<InquiryProvider>();
     await provider.loadInquiries();
-    return Future.wait(provider.inquiries.map((inquiry) => provider.loadInquiry(inquiry.id)));
+    return Future.wait(
+        provider.inquiries.map((inquiry) => provider.loadInquiry(inquiry.id)));
   }
 
   Future<void> _refresh() async {
@@ -66,7 +68,9 @@ class _ConversationHistoryScreenState extends State<ConversationHistoryScreen> {
               }
 
               final inquiries = snapshot.data ?? [];
-              final withMessages = inquiries.where((inquiry) => inquiry.messages.isNotEmpty).toList();
+              final withMessages = inquiries
+                  .where((inquiry) => inquiry.messages.isNotEmpty)
+                  .toList();
 
               return ListView(
                 padding: const EdgeInsets.all(28),
@@ -123,12 +127,15 @@ class _ConversationHeader extends StatelessWidget {
               children: [
                 Text(
                   'Conversation History',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w800),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Review message exchanges between students and department staff.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white.withValues(alpha: 0.84), height: 1.42),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.84),
+                      height: 1.42),
                 ),
               ],
             ),
@@ -167,16 +174,25 @@ class _InquiryConversationCard extends StatelessWidget {
             children: [
               Text(
                 inquiry.subject,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xff253044), fontWeight: FontWeight.w800),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: const Color(0xff253044),
+                    fontWeight: FontWeight.w800),
               ),
-              _ConversationChip(label: 'INQ-${inquiry.id.toString().padLeft(3, '0')}', color: const Color(0xff4f67d8)),
-              _ConversationChip(label: _label(inquiry.status), color: _statusColor(inquiry.status)),
+              _ConversationChip(
+                  label: 'INQ-${inquiry.id.toString().padLeft(3, '0')}',
+                  color: const Color(0xff4f67d8)),
+              _ConversationChip(
+                  label: _label(inquiry.status),
+                  color: _statusColor(inquiry.status)),
             ],
           ),
           const SizedBox(height: 6),
-          Text(inquiry.departmentName ?? 'Department', style: const TextStyle(color: Color(0xff718096), fontWeight: FontWeight.w700)),
+          Text(inquiry.departmentName ?? 'Department',
+              style: const TextStyle(
+                  color: Color(0xff718096), fontWeight: FontWeight.w700)),
           const SizedBox(height: 14),
-          ...inquiry.messages.map((message) => _ConversationMessageTile(message: message)),
+          ...inquiry.messages
+              .map((message) => _ConversationMessageTile(message: message)),
         ],
       ),
     );
@@ -190,7 +206,9 @@ class _ConversationMessageTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = message.isDepartmentResponse ? const Color(0xff4fa7a1) : const Color(0xff4f67d8);
+    final color = message.isDepartmentResponse
+        ? const Color(0xff4fa7a1)
+        : const Color(0xff4f67d8);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -204,12 +222,17 @@ class _ConversationMessageTile extends StatelessWidget {
         leading: CircleAvatar(
           backgroundColor: color.withValues(alpha: 0.12),
           foregroundColor: color,
-          child: Icon(message.isDepartmentResponse ? Icons.support_agent : Icons.person_outline),
+          child: Icon(message.isDepartmentResponse
+              ? Icons.support_agent
+              : Icons.person_outline),
         ),
-        title: Text(message.senderName ?? 'User', style: const TextStyle(color: Color(0xff253044), fontWeight: FontWeight.w800)),
+        title: Text(message.senderName ?? 'User',
+            style: const TextStyle(
+                color: Color(0xff253044), fontWeight: FontWeight.w800)),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 6),
-          child: Text(message.message, style: const TextStyle(color: Color(0xff344054), height: 1.45)),
+          child: Text(message.message,
+              style: const TextStyle(color: Color(0xff344054), height: 1.45)),
         ),
       ),
     );
@@ -238,8 +261,8 @@ class _ConversationEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _ConversationPanel(
-      child: const Column(
+    return const _ConversationPanel(
+      child: Column(
         children: [
           CircleAvatar(
             radius: 28,
@@ -248,9 +271,12 @@ class _ConversationEmptyState extends StatelessWidget {
             child: Icon(Icons.forum_outlined),
           ),
           SizedBox(height: 12),
-          Text('No conversation history yet', style: TextStyle(color: Color(0xff253044), fontWeight: FontWeight.w800)),
+          Text('No conversation history yet',
+              style: TextStyle(
+                  color: Color(0xff253044), fontWeight: FontWeight.w800)),
           SizedBox(height: 4),
-          Text('Student and department messages will appear here.', style: TextStyle(color: Color(0xff718096))),
+          Text('Student and department messages will appear here.',
+              style: TextStyle(color: Color(0xff718096))),
         ],
       ),
     );
@@ -296,5 +322,6 @@ Color _statusColor(String status) {
 
 String _label(String value) => value
     .split('_')
-    .map((word) => word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
+    .map((word) =>
+        word.isEmpty ? word : '${word[0].toUpperCase()}${word.substring(1)}')
     .join(' ');

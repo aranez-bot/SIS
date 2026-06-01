@@ -188,6 +188,7 @@
                 <i class="fas fa-comments"></i> Student Inquiry System
             </a>
             <div class="d-flex gap-2">
+                <a href="{{ route('mobile-app') }}" class="btn btn-outline btn-sm">Mobile App</a>
                 @auth
                     <a href="{{ route('dashboard') }}" class="btn btn-primary btn-sm">Dashboard</a>
                 @else
@@ -217,6 +218,9 @@
                                 <i class="fas fa-arrow-right-to-bracket"></i> Login
                             </a>
                         @endauth
+                        <a href="{{ route('mobile-app') }}" class="btn btn-outline">
+                            <i class="fab fa-android"></i> Download Android app
+                        </a>
                     </div>
                 </div>
             </div>

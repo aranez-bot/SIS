@@ -26,7 +26,10 @@ class _InquiryDetailScreenState extends State<InquiryDetailScreen> {
   void initState() {
     super.initState();
     _future = context.read<InquiryProvider>().loadInquiry(widget.inquiryId);
-    Future.microtask(() => context.read<InquiryProvider>().loadDepartments());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<InquiryProvider>().loadDepartments();
+    });
   }
 
   @override
@@ -386,10 +389,10 @@ class _InquiryDescriptionPanel extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            backgroundColor: const Color(0xffeef3ff),
-            foregroundColor: const Color(0xff4f67d8),
-            child: const Icon(Icons.description_outlined),
+          const CircleAvatar(
+            backgroundColor: Color(0xffeef3ff),
+            foregroundColor: Color(0xff4f67d8),
+            child: Icon(Icons.description_outlined),
           ),
           const SizedBox(width: 14),
           Expanded(
