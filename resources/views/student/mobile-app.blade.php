@@ -90,25 +90,6 @@
 @endpush
 
 @section('content')
-    <div @guest class="main-content" @endguest>
-    @guest
-        <nav class="navbar navbar-expand-lg mb-4">
-            <div class="container-fluid px-0">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <i class="fas fa-comments"></i> Inquiry System
-                </a>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('login') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-right-to-bracket"></i> Login
-                    </a>
-                    <a href="{{ route('register') }}" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i> Register
-                    </a>
-                </div>
-            </div>
-        </nav>
-    @endguest
-
     <div class="mobile-app-hero mb-4">
         <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center">
             <div>
@@ -118,15 +99,9 @@
                 </h1>
                 <p class="mb-0">Install the APK on your Android phone for faster inquiry tracking and updates.</p>
             </div>
-            @auth
-                <a href="{{ route('dashboard') }}" class="btn btn-light">
-                    <i class="fas fa-arrow-left"></i> Dashboard
-                </a>
-            @else
-                <a href="{{ url('/') }}" class="btn btn-light">
-                    <i class="fas fa-arrow-left"></i> Web App
-                </a>
-            @endauth
+            <a href="{{ route('student.dashboard') }}" class="btn btn-light">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
         </div>
     </div>
 
@@ -156,17 +131,17 @@
                             <strong>{{ $apkExists ? 'Available' : 'Unavailable' }}</strong>
                         </div>
                         <div>
-                            <span>Source</span>
-                            <strong>{{ $apkSource }}</strong>
+                            <span>File Size</span>
+                            <strong>{{ $apkSize ?? 'Pending' }}</strong>
                         </div>
                         <div>
-                            <span>Size</span>
-                            <strong>{{ $apkSize ?? 'Pending' }}</strong>
+                            <span>Updated</span>
+                            <strong>{{ $apkUpdatedAt ?? 'Pending' }}</strong>
                         </div>
                     </div>
 
                     @if ($apkExists)
-                        <a href="{{ $apkDownloadUrl }}" class="btn btn-primary btn-lg">
+                        <a href="{{ route('student.mobile-app.download') }}" class="btn btn-primary btn-lg">
                             <i class="fas fa-download"></i> Download APK
                         </a>
                     @else
@@ -210,6 +185,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection

@@ -44,8 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
               icon: Icons.mail_outline,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Email is required' : null,
+              validator: (value) => value == null || value.isEmpty ? 'Email is required' : null,
             ),
             const SizedBox(height: 24),
             Row(
@@ -59,9 +58,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                   ),
                 ),
-                const TextButton(
+                TextButton(
                   onPressed: null,
-                  child: Text('Forgot password?'),
+                  child: const Text('Forgot password?'),
                 ),
               ],
             ),
@@ -72,21 +71,16 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your password',
               icon: Icons.lock_outline,
               obscureText: !_showPassword,
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Password is required'
-                  : null,
+              validator: (value) => value == null || value.isEmpty ? 'Password is required' : null,
               suffix: IconButton(
                 tooltip: _showPassword ? 'Hide password' : 'Show password',
                 onPressed: () => setState(() => _showPassword = !_showPassword),
-                icon: Icon(_showPassword
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined),
+                icon: Icon(_showPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined),
               ),
             ),
             if (auth.error != null) ...[
               const SizedBox(height: 14),
-              Text(auth.error!,
-                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              Text(auth.error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ],
             const SizedBox(height: 26),
             StudentAuthSubmitButton(
@@ -94,9 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
               isLoading: auth.isLoading,
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  context
-                      .read<AuthProvider>()
-                      .login(_email.text.trim(), _password.text);
+                  context.read<AuthProvider>().login(_email.text.trim(), _password.text);
                 }
               },
             ),
@@ -107,17 +99,13 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Text(
                   'New student? ',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: const Color(0xff7d8797)),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xff7d8797)),
                 ),
                 TextButton(
                   onPressed: auth.isLoading
                       ? null
                       : () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => const RegisterScreen()),
+                            MaterialPageRoute(builder: (_) => const RegisterScreen()),
                           ),
                   child: const Text('Create your account'),
                 ),

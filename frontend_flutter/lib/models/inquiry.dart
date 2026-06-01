@@ -75,8 +75,7 @@ class InquiryMessage {
   final String? senderType;
   final String? createdAt;
 
-  bool get isDepartmentResponse =>
-      senderType == 'department_admin' || senderType == 'super_admin';
+  bool get isDepartmentResponse => senderType == 'department_admin' || senderType == 'super_admin';
 
   factory InquiryMessage.fromJson(Map<String, dynamic> json) => InquiryMessage(
         id: json['id'],

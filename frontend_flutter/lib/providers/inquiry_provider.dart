@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
 
 import '../models/app_notification.dart';
 import '../models/department.dart';
@@ -76,8 +77,7 @@ class InquiryProvider extends ChangeNotifier {
         if (fromDate != null) 'created_from': _dateParam(fromDate),
         if (toDate != null) 'created_to': _dateParam(toDate),
       };
-      final query =
-          params.isEmpty ? '' : '?${Uri(queryParameters: params).query}';
+      final query = params.isEmpty ? '' : '?${Uri(queryParameters: params).query}';
       final response = await api.get('/inquiries$query');
       final paginated = response['data']['data'] as List;
       inquiries = paginated.map((item) => Inquiry.fromJson(item)).toList();
@@ -101,8 +101,7 @@ class InquiryProvider extends ChangeNotifier {
   Future<void> loadNotifications() async {
     final response = await api.get('/notifications');
     final paginated = response['data']['data'] as List;
-    notifications =
-        paginated.map((item) => AppNotification.fromJson(item)).toList();
+    notifications = paginated.map((item) => AppNotification.fromJson(item)).toList();
     unreadNotifications = notifications.where((item) => item.isUnread).length;
     notifyListeners();
   }
@@ -115,17 +114,13 @@ class InquiryProvider extends ChangeNotifier {
 
   Future<void> loadFaqs() async {
     final response = await api.get('/faqs');
-    faqs = ((response['data'] ?? []) as List)
-        .map((item) => FaqItem.fromJson(item))
-        .toList();
+    faqs = ((response['data'] ?? []) as List).map((item) => FaqItem.fromJson(item)).toList();
     notifyListeners();
   }
 
   Future<void> loadDepartmentFaqs() async {
     final response = await api.get('/department/faqs');
-    departmentFaqs = ((response['data'] ?? []) as List)
-        .map((item) => FaqItem.fromJson(item))
-        .toList();
+    departmentFaqs = ((response['data'] ?? []) as List).map((item) => FaqItem.fromJson(item)).toList();
     notifyListeners();
   }
 

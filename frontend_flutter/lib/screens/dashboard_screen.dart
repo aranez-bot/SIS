@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../models/inquiry.dart';
 import '../providers/auth_provider.dart';
 import '../providers/inquiry_provider.dart';
-import '../widgets/app_ui.dart';
 import 'inquiry_detail_screen.dart';
 import 'inquiry_form_screen.dart';
 import 'inquiry_list_screen.dart';
@@ -22,10 +21,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      context.read<InquiryProvider>().loadDashboard();
-    });
+    Future.microtask(() => context.read<InquiryProvider>().loadDashboard());
   }
 
   @override
@@ -36,38 +32,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final user = auth.user;
     final isSuperAdmin = user?.userType == 'super_admin';
     final isDepartmentAdmin = user?.userType == 'department_admin';
-    return AppScreen(
-      onRefresh: () => context.read<InquiryProvider>().loadDashboard(),
-      children: [
-        _Header(
-          name: user?.name ?? 'Student',
-          email: user?.email ?? '',
-          userIdentifier: user?.userIdentifier,
-          isSuperAdmin: isSuperAdmin,
-          isDepartmentAdmin: isDepartmentAdmin,
-          unreadAlerts: provider.unreadNotifications,
-          onCreate: () => _open(context, const InquiryFormScreen()),
-          onAlerts: () => _open(context, const NotificationsScreen()),
-          onDownloadApp: () => _open(context, const MobileAppScreen()),
-          onLogout: auth.logout,
+    final horizontalPadding =
+        MediaQuery.sizeOf(context).width < 720 ? 16.0 : 28.0;
+
+    return Scaffold(
+      backgroundColor: const Color(0xfff4f7fb),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xfffbfcff), Color(0xfff3f8fb), Color(0xffeef4fb)],
+          ),
         ),
-        const SizedBox(height: 16),
-        if (isSuperAdmin) ...[
-          _SuperadminMetricGrid(counts: counts),
-          const SizedBox(height: 16),
-          _SuperadminOperations(
-              counts: counts, recentInquiries: provider.recentInquiries),
-        ] else if (isDepartmentAdmin) ...[
-          _DepartmentMetricGrid(counts: counts),
-        ] else ...[
-          _StudentMetricGrid(counts: counts),
-          const SizedBox(height: 16),
-          _RecentInquiries(
-              inquiries: provider.recentInquiries,
-              isSuperAdmin: false,
-              isDepartmentAdmin: false),
-        ],
-      ],
+        child: RefreshIndicator(
+          onRefresh: () => context.read<InquiryProvider>().loadDashboard(),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(
+                horizontalPadding, 24, horizontalPadding, 32),
+            children: [
+              _Header(
+                name: user?.name ?? 'Student',
+                email: user?.email ?? '',
+                userIdentifier: user?.userIdentifier,
+                isSuperAdmin: isSuperAdmin,
+                isDepartmentAdmin: isDepartmentAdmin,
+                unreadAlerts: provider.unreadNotifications,
+                onCreate: () => _open(context, const InquiryFormScreen()),
+                onAlerts: () => _open(context, const NotificationsScreen()),
+                onDownloadApp: () => _open(context, const MobileAppScreen()),
+                onLogout: auth.logout,
+              ),
+              const SizedBox(height: 22),
+              if (isSuperAdmin) ...[
+                _SuperadminMetricGrid(counts: counts),
+                const SizedBox(height: 22),
+                _SuperadminOperations(
+                    counts: counts, recentInquiries: provider.recentInquiries),
+              ] else if (isDepartmentAdmin) ...[
+                _DepartmentMetricGrid(counts: counts),
+              ] else ...[
+                _StudentMetricGrid(counts: counts),
+                const SizedBox(height: 22),
+                _MobileAppDownloadCard(
+                  onOpen: () => _open(context, const MobileAppScreen()),
+                ),
+                const SizedBox(height: 22),
+                _RecentInquiries(
+                    inquiries: provider.recentInquiries,
+                    isSuperAdmin: false,
+                    isDepartmentAdmin: false),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -127,8 +146,8 @@ class _Header extends StatelessWidget {
       OutlinedButton.icon(
         onPressed: onDownloadApp,
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          side: const BorderSide(color: AppColors.border),
+          foregroundColor: Colors.white,
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.58)),
         ),
         icon: const Icon(Icons.android_outlined),
         label: const Text('Download APK'),
@@ -136,7 +155,7 @@ class _Header extends StatelessWidget {
       IconButton(
         tooltip: 'Notifications',
         onPressed: onAlerts,
-        color: AppColors.primary,
+        color: Colors.white,
         icon: Badge(
           isLabelVisible: unreadAlerts > 0,
           label: Text('$unreadAlerts'),
@@ -154,6 +173,91 @@ class _Header extends StatelessWidget {
           'Track your submitted inquiries, view responses, and stay updated without losing the thread.',
       gradient: const [Color(0xff596bdd), Color(0xff7aa6e8)],
       trailing: _HeroActions(children: actions),
+    );
+  }
+}
+
+class _MobileAppDownloadCard extends StatelessWidget {
+  const _MobileAppDownloadCard({required this.onOpen});
+
+  final VoidCallback onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: _softCardDecoration(),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final content = Row(
+              children: [
+                Container(
+                  width: 54,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffe8f6ef),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.android_outlined,
+                    color: Color(0xff4c9a73),
+                    size: 30,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Install the Android app',
+                        style:
+                            Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: const Color(0xff253044),
+                                  fontWeight: FontWeight.w800,
+                                ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Download the APK installer for quicker inquiry tracking on your phone.',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: const Color(0xff718096),
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+
+            final button = FilledButton.icon(
+              onPressed: onOpen,
+              icon: const Icon(Icons.download_outlined),
+              label: const Text('Open Download Page'),
+            );
+
+            if (constraints.maxWidth < 760) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  content,
+                  const SizedBox(height: 16),
+                  button,
+                ],
+              );
+            }
+
+            return Row(
+              children: [
+                Expanded(child: content),
+                const SizedBox(width: 18),
+                button,
+              ],
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -242,58 +346,142 @@ class _DashboardHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppPanel(
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final content = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppStatusChip(icon: icon, label: badge, color: gradient.first),
-              const SizedBox(height: 14),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppColors.text,
-                      fontWeight: FontWeight.w800,
-                      height: 1.08,
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(22),
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradient),
+        boxShadow: [
+          BoxShadow(
+            color: gradient.first.withValues(alpha: 0.22),
+            blurRadius: 34,
+            offset: const Offset(0, 18),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -74,
+            top: -86,
+            child: _HeroGlow(size: 240),
+          ),
+          Positioned(
+            right: 72,
+            bottom: -96,
+            child: _HeroGlow(size: 180),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final content = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _HeroBadge(icon: icon, label: badge),
+                    const SizedBox(height: 18),
+                    Text(
+                      title,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                                height: 1.08,
+                              ),
                     ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.muted,
-                      height: 1.4,
+                    const SizedBox(height: 10),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.84),
+                            height: 1.45,
+                          ),
                     ),
-              ),
-            ],
-          );
+                  ],
+                );
 
-          if (trailing == null) return content;
+                if (trailing == null) {
+                  return content;
+                }
 
-          if (constraints.maxWidth < 760) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                content,
-                const SizedBox(height: 16),
-                trailing!,
-              ],
-            );
-          }
+                if (constraints.maxWidth < 760) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      content,
+                      const SizedBox(height: 20),
+                      trailing!,
+                    ],
+                  );
+                }
 
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: content),
-              const SizedBox(width: 18),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 400),
-                child: trailing!,
-              ),
-            ],
-          );
-        },
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: content),
+                    const SizedBox(width: 24),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 420),
+                      child: trailing!,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeroBadge extends StatelessWidget {
+  const _HeroBadge({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.13),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Colors.white, size: 17),
+            const SizedBox(width: 8),
+            Text(label,
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.w800)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroGlow extends StatelessWidget {
+  const _HeroGlow({required this.size});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: 0.10),
       ),
     );
   }
@@ -335,8 +523,8 @@ class _HeroIdentity extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 24,
-            backgroundColor: AppColors.primary.withValues(alpha: 0.10),
-            foregroundColor: AppColors.primary,
+            backgroundColor: Colors.white.withValues(alpha: 0.20),
+            foregroundColor: Colors.white,
             child: Text(avatarText),
           ),
           const SizedBox(width: 14),
@@ -346,20 +534,22 @@ class _HeroIdentity extends StatelessWidget {
               children: [
                 const Text('Account Details',
                     style: TextStyle(
-                        color: AppColors.muted,
+                        color: Color(0xffe4edff),
                         fontSize: 12,
                         fontWeight: FontWeight.w800)),
                 Text(name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: AppColors.text, fontWeight: FontWeight.w800)),
+                        color: Colors.white, fontWeight: FontWeight.w800)),
                 Text(email,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppColors.muted)),
+                    style:
+                        TextStyle(color: Colors.white.withValues(alpha: 0.78))),
                 if (userIdentifier != null && userIdentifier!.isNotEmpty)
                   Text('ID: $userIdentifier',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: AppColors.muted)),
+                      style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.78))),
               ],
             ),
           ),
@@ -390,8 +580,8 @@ class _HeroAccountActions extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: AppColors.primary.withValues(alpha: 0.10),
-            foregroundColor: AppColors.primary,
+            backgroundColor: Colors.white.withValues(alpha: 0.22),
+            foregroundColor: Colors.white,
             child: Text(name.isEmpty ? 'D' : name[0].toUpperCase()),
           ),
           const SizedBox(width: 12),
@@ -402,17 +592,18 @@ class _HeroAccountActions extends StatelessWidget {
                 Text(name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: AppColors.text, fontWeight: FontWeight.w800)),
+                        color: Colors.white, fontWeight: FontWeight.w800)),
                 Text(email,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppColors.muted)),
+                    style:
+                        TextStyle(color: Colors.white.withValues(alpha: 0.78))),
               ],
             ),
           ),
           IconButton(
             tooltip: 'Notifications',
             onPressed: onAlerts,
-            color: AppColors.primary,
+            color: Colors.white,
             icon: Badge(
               isLabelVisible: unreadAlerts > 0,
               label: Text('$unreadAlerts'),
@@ -430,7 +621,7 @@ class _HeroAccountActions extends StatelessWidget {
               const PopupMenuDivider(),
               const PopupMenuItem(value: 'logout', child: Text('Logout')),
             ],
-            child: const Icon(Icons.more_vert, color: AppColors.muted),
+            child: const Icon(Icons.more_vert, color: Colors.white),
           ),
         ],
       ),
@@ -447,9 +638,9 @@ class _HeroGlassBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.surfaceAlt,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.border),
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -481,8 +672,8 @@ class _ProfileMenu extends StatelessWidget {
         const PopupMenuItem(value: 'logout', child: Text('Logout')),
       ],
       child: CircleAvatar(
-        backgroundColor: AppColors.primary.withValues(alpha: 0.10),
-        foregroundColor: AppColors.primary,
+        backgroundColor: Colors.white.withValues(alpha: 0.22),
+        foregroundColor: Colors.white,
         child: Text(name.isEmpty ? 'S' : name[0].toUpperCase()),
       ),
     );
@@ -1200,15 +1391,22 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = switch (status) {
-      'pending' => AppColors.warning,
-      'in_progress' => AppColors.primary,
-      'answered' => AppColors.teal,
-      'resolved' => AppColors.success,
-      'rejected' => AppColors.danger,
-      _ => AppColors.muted,
+      'pending' => const Color(0xffc48a3a),
+      'in_progress' => const Color(0xff4f67d8),
+      'answered' => const Color(0xff4fa7a1),
+      'resolved' => const Color(0xff4c9a73),
+      'rejected' => const Color(0xffc75b68),
+      _ => const Color(0xff718096),
     };
 
-    return AppStatusChip(label: _label(status), color: color);
+    return Chip(
+      label: Text(_label(status)),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      backgroundColor: color.withValues(alpha: 0.12),
+      labelStyle:
+          TextStyle(color: color, fontSize: 15, fontWeight: FontWeight.w700),
+      side: BorderSide.none,
+    );
   }
 }
 
@@ -1293,8 +1491,15 @@ String _formatDate(String? value) {
 
 BoxDecoration _softCardDecoration() {
   return BoxDecoration(
-    color: AppColors.surface,
-    borderRadius: BorderRadius.circular(8),
-    border: Border.all(color: AppColors.border),
+    color: Colors.white.withValues(alpha: 0.96),
+    borderRadius: BorderRadius.circular(18),
+    border: Border.all(color: const Color(0xffe3ebf5)),
+    boxShadow: [
+      BoxShadow(
+        color: const Color(0xff202838).withValues(alpha: 0.055),
+        blurRadius: 28,
+        offset: const Offset(0, 14),
+      ),
+    ],
   );
 }

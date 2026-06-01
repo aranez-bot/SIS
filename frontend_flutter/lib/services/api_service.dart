@@ -15,23 +15,18 @@ class ApiService {
   Map<String, String> get _headers => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        if ((token ?? sharedToken) != null)
-          'Authorization': 'Bearer ${token ?? sharedToken}',
+        if ((token ?? sharedToken) != null) 'Authorization': 'Bearer ${token ?? sharedToken}',
       };
 
   Map<String, String> get _multipartHeaders => {
         'Accept': 'application/json',
-        if ((token ?? sharedToken) != null)
-          'Authorization': 'Bearer ${token ?? sharedToken}',
+        if ((token ?? sharedToken) != null) 'Authorization': 'Bearer ${token ?? sharedToken}',
       };
 
   Future<Map<String, dynamic>> get(String path) => _send('GET', path);
-  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> body) =>
-      _send('POST', path, body);
-  Future<Map<String, dynamic>> put(String path, Map<String, dynamic> body) =>
-      _send('PUT', path, body);
-  Future<Map<String, dynamic>> patch(String path, Map<String, dynamic> body) =>
-      _send('PATCH', path, body);
+  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> body) => _send('POST', path, body);
+  Future<Map<String, dynamic>> put(String path, Map<String, dynamic> body) => _send('PUT', path, body);
+  Future<Map<String, dynamic>> patch(String path, Map<String, dynamic> body) => _send('PATCH', path, body);
   Future<Map<String, dynamic>> delete(String path) => _send('DELETE', path);
 
   Future<Map<String, dynamic>> postMultipart(
@@ -54,33 +49,26 @@ class ApiService {
 
     final streamed = await request.send();
     final response = await http.Response.fromStream(streamed);
-    final decoded = response.body.isEmpty
-        ? <String, dynamic>{}
-        : jsonDecode(response.body) as Map<String, dynamic>;
+    final decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body) as Map<String, dynamic>;
 
     if (response.statusCode >= 400) {
-      throw ApiException(decoded['message']?.toString() ?? 'Request failed',
-          response.statusCode, decoded);
+      throw ApiException(decoded['message']?.toString() ?? 'Request failed', response.statusCode, decoded);
     }
 
     return decoded;
   }
 
-  Future<Map<String, dynamic>> _send(String method, String path,
-      [Map<String, dynamic>? body]) async {
+  Future<Map<String, dynamic>> _send(String method, String path, [Map<String, dynamic>? body]) async {
     final uri = Uri.parse('$baseUrl$path');
     final request = http.Request(method, uri)..headers.addAll(_headers);
     if (body != null) request.body = jsonEncode(body);
 
     final streamed = await request.send();
     final response = await http.Response.fromStream(streamed);
-    final decoded = response.body.isEmpty
-        ? <String, dynamic>{}
-        : jsonDecode(response.body) as Map<String, dynamic>;
+    final decoded = response.body.isEmpty ? <String, dynamic>{} : jsonDecode(response.body) as Map<String, dynamic>;
 
     if (response.statusCode >= 400) {
-      throw ApiException(decoded['message']?.toString() ?? 'Request failed',
-          response.statusCode, decoded);
+      throw ApiException(decoded['message']?.toString() ?? 'Request failed', response.statusCode, decoded);
     }
 
     return decoded;

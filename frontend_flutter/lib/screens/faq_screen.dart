@@ -14,10 +14,7 @@ class _FaqScreenState extends State<FaqScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      context.read<InquiryProvider>().loadFaqs();
-    });
+    Future.microtask(() => context.read<InquiryProvider>().loadFaqs());
   }
 
   @override
@@ -35,8 +32,7 @@ class _FaqScreenState extends State<FaqScreen> {
                     (faq) => Card(
                       child: ExpansionTile(
                         title: Text(faq.question),
-                        childrenPadding:
-                            const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                         children: [Text(faq.answer)],
                       ),
                     ),
