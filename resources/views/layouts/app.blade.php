@@ -902,11 +902,6 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link @if (Route::currentRouteName() == 'student.mobile-app') active @endif" href="{{ route('student.mobile-app') }}">
-                                        <i class="fas fa-mobile-alt"></i> Mobile App
-                                    </a>
-                                </li>
-                                <li class="nav-item">
                                     <a class="nav-link @if (Route::currentRouteName() == 'student.inquiry.history') active @endif" href="{{ route('student.inquiry.history') }}">
                                         <i class="fas fa-history"></i> Inquiry History
                                     </a>

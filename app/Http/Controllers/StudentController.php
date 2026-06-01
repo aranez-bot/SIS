@@ -23,47 +23,6 @@ class StudentController extends Controller
         return view('student.dashboard', compact('inquiries', 'unreadNotifications'));
     }
 
-    public function mobileApp()
-    {
-        $apkPath = public_path('downloads/student-inquiry.apk');
-        $apkExists = file_exists($apkPath);
-
-        return view('student.mobile-app', [
-            'apkExists' => $apkExists,
-            'apkFileName' => 'student-inquiry.apk',
-            'apkSize' => $apkExists ? $this->formatBytes(filesize($apkPath)) : null,
-            'apkUpdatedAt' => $apkExists ? date('M d, Y h:i A', filemtime($apkPath)) : null,
-        ]);
-    }
-
-    public function downloadMobileApp()
-    {
-        $apkPath = public_path('downloads/student-inquiry.apk');
-
-        if (! file_exists($apkPath)) {
-            return back()->withErrors([
-                'apk' => 'The Android APK is not available yet. Please contact the system administrator.',
-            ]);
-        }
-
-        return response()->download($apkPath, 'student-inquiry.apk', [
-            'Content-Type' => 'application/vnd.android.package-archive',
-        ]);
-    }
-
-    private function formatBytes(int $bytes): string
-    {
-        if ($bytes >= 1048576) {
-            return round($bytes / 1048576, 1) . ' MB';
-        }
-
-        if ($bytes >= 1024) {
-            return round($bytes / 1024, 1) . ' KB';
-        }
-
-        return $bytes . ' bytes';
-    }
-
     public function createInquiry()
     {
         $departments = Department::where('is_active', true)->get();

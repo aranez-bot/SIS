@@ -39,8 +39,6 @@ Route::middleware('auth')->group(function () {
     // Student Routes
     Route::middleware('user.type:student')->group(function () {
         Route::get('/student/dashboard', [StudentController::class, 'dashboard'])->name('student.dashboard');
-        Route::get('/student/mobile-app', [StudentController::class, 'mobileApp'])->name('student.mobile-app');
-        Route::get('/student/mobile-app/download', [StudentController::class, 'downloadMobileApp'])->name('student.mobile-app.download');
         Route::get('/student/inquiry/create', [StudentController::class, 'createInquiry'])->name('student.inquiry.create');
         Route::post('/student/inquiry', [StudentController::class, 'storeInquiry'])->name('student.inquiry.store');
         Route::get('/student/inquiry/{inquiry}', [StudentController::class, 'viewInquiry'])->name('student.inquiry.show');

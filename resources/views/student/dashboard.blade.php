@@ -8,9 +8,6 @@
             <i class="fas fa-chart-line"></i> Dashboard
         </h1>
         <div class="d-flex flex-wrap gap-2">
-            <a href="{{ route('student.mobile-app') }}" class="btn btn-outline-primary">
-                <i class="fas fa-mobile-alt"></i> Download App
-            </a>
             <a href="{{ route('student.inquiry.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus-circle"></i> New Inquiry
             </a>
@@ -45,20 +42,6 @@
                 <h3>{{ $unreadNotifications }}</h3>
                 <p>Notifications</p>
             </div>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body d-flex flex-wrap gap-3 justify-content-between align-items-center">
-            <div>
-                <h5 class="mb-1">
-                    <i class="fas fa-mobile-alt text-primary"></i> Student Inquiry Mobile App
-                </h5>
-                <p class="text-muted mb-0">Download the Android APK installer for quicker access on your phone.</p>
-            </div>
-            <a href="{{ route('student.mobile-app') }}" class="btn btn-primary">
-                <i class="fas fa-download"></i> Open Download Page
-            </a>
         </div>
     </div>
 
